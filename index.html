@@ -21,6 +21,23 @@
         .text-glow {
             text-shadow: 0 0 8px currentColor, 0 0 12px rgba(196, 181, 253, 0.5);
         }
+        .animate-gradient-text {
+            background: linear-gradient(90deg, #f9a8d4, #c4b5fd, #a5b4fc, #f9a8d4);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text; /* For Safari compatibility */
+            color: transparent;
+            animation: gradient-animation 4s linear infinite;
+        }
+
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 200% 50%;
+            }
+        }
     </style>
     <script type="importmap">
         {

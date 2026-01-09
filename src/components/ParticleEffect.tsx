@@ -2,7 +2,8 @@
 import React, { useEffect, useCallback } from 'react';
 
 const ParticleEffect: React.FC = () => {
-    const particleColors = ['#c4b5fd', '#f9a8d4', '#a5b4fc'];
+    const particleColors = ['#c4b5fd', '#f9a8d4', '#a5b4fc','#CFCCE3'
+        ,'#B6B3D6','#F6DFD6','#F8B2A2','#F1837A'];
 
     const createParticle = useCallback((x: number, y: number) => {
         const particle = document.createElement('div');

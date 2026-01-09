@@ -1,7 +1,7 @@
 
 import React from 'react';
-import TerminalWindow from './TerminalWindow.tsx';
-import TypingEffect from './TypingEffect.tsx';
+import TerminalWindow from './TerminalWindow';
+import TypingEffect from './TypingEffect';
 
 const StatItem: React.FC<{ value: string; label: string }> = ({ value, label }) => (
     <div className="bg-violet-100/50 p-4 rounded-md text-center border border-violet-200 transition-all duration-300 hover:bg-violet-200/50 hover:border-violet-300">
@@ -16,7 +16,7 @@ const About: React.FC = () => {
     return (
         <TerminalWindow title="about_me.txt" icon={<i className="fas fa-user-circle"></i>}>
             <div className="text-slate-600 leading-relaxed mb-8 min-h-[100px] sm:min-h-[70px]">
-                <TypingEffect text={aboutText} speed={30} />
+                <TypingEffect text={aboutText} speed={30} loop loopDelay={30000} />
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
