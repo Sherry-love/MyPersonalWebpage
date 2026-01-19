@@ -10,7 +10,8 @@ const StatItem: React.FC<{ value: string; label: string }> = ({ value, label }) 
 );
 
 const About: React.FC = () => {
-    const aboutText = "我是一名充满热情的计算机科学专业学生，专注于系统编程和算法设计。喜欢用C++构建高效、可靠的软件解决方案。目前正在深入学习操作系统、计算机网络和分布式系统等核心计算机科学领域。";
+    const aboutText = "我是一名充满热情的计算机科学专业学生，专注于系统编程和算法设计。" +
+        "在坚冰还盖着北海的时候，我看到了怒放的梅花。";
 
     return (
         <TerminalWindow title="about_me.txt" icon={<i className="fas fa-user-circle"></i>}>
