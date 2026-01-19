@@ -1,4 +1,3 @@
-// src/components/Hobbies.tsx
 import React from 'react';
 import TerminalWindow from './TerminalWindow';
 
@@ -70,11 +69,11 @@ const Hobbies: React.FC = () => {
         <TerminalWindow title="hobbies.txt" icon={<i className="fas fa-heart"></i>}>
             <div className="space-y-6">
                 <p className="text-slate-600 leading-relaxed font-mono text-sm">
-                    // These are the activities that fuel my creativity and keep me balanced...
+                    These are the activities that fuel my creativity and keep me balanced...
                 </p>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {hobbies.map((hobby) => (  // 移除了未使用的index参数
+                    {hobbies.map((hobby) => (
                         <div
                             key={hobby.name}
                             className="flex flex-col items-center p-4 rounded-lg border border-violet-200 bg-violet-50/30 hover:bg-pink-50/50 transition-all duration-300 hover:border-pink-300 hover:shadow-md hover:shadow-pink-200/30 hover:-translate-y-1 cursor-default group"

@@ -7,6 +7,8 @@ import Projects from './components/Projects';
 import Footer from './components/Footer';
 import ParticleEffect from './components/ParticleEffect';
 import Hobbies from './components/Hobbies';
+import Achievements from './components/Achievements';
+
 
 const App: React.FC = () => {
     return (
@@ -19,6 +21,7 @@ const App: React.FC = () => {
                     <Skills />
                     <Platforms />
                     <Hobbies />
+                    <Achievements />
                     <Projects />
                 </main>
                 <Footer />
