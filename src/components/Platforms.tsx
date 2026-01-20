@@ -22,6 +22,15 @@ const platformData = [
         buttonText: '查看题解'
     },
     {
+        id: 'nowcoder',
+        icon: 'fas fa-graduation-cap',
+        colorClasses: 'bg-blue-500 hover:bg-blue-600',
+        title: '牛客网',
+        description: '编程练习和面试准备平台，包含算法题、面经分享和在线编程评测系统。',
+        url: 'https://www.nowcoder.com/users/906354746',
+        buttonText: '访问牛客网'
+    },
+    {
         id: 'kaggle',
         icon: 'fab fa-kaggle',
         colorClasses: 'bg-sky-500 hover:bg-sky-600',
