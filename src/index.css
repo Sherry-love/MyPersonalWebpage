@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 平滑滚动 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(165, 245, 252, 0.77);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #c4b5fd, #f9a8d4);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #c4b5fd, #f9a8b4);
+}
+
+/* 动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 发光效果 */
+.text-glow {
+    text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+}
+
+/* 渐变文字 */
+.animate-gradient-text {
+    background: linear-gradient(45deg, #C4B5FDFF, #F9A8D4FF, #A5B4FCFF, #f9a8b4);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient 8s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}

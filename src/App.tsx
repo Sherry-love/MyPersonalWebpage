@@ -1,32 +1,23 @@
+// src/App.tsx
 import React from 'react';
-import Header from './components/Header';
-import About from './components/About';
-import Skills from './components/Skills';
-import Platforms from './components/Platforms';
-import Projects from './components/Projects';
-import Footer from './components/Footer';
-import ParticleEffect from './components/ParticleEffect';
-import Hobbies from './components/Hobbies';
-import Achievements from './components/Achievements';
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import PageA1 from './pages/PageA1';
+import PageA2 from './pages/PageA2';
+import PageA3 from './pages/PageA3';
+import PageA4 from './pages/PageA4';
 
 const App: React.FC = () => {
     return (
-        <div className="bg-rose-50 min-h-screen text-slate-700 font-sans">
-            <ParticleEffect />
-            <div className="relative z-10 container mx-auto p-4 sm:p-6 md:p-8">
-                <main className="space-y-12">
-                    <Header />
-                    <About />
-                    <Skills />
-                    <Platforms />
-                    <Hobbies />
-                    <Achievements />
-                    <Projects />
-                </main>
-                <Footer />
-            </div>
-        </div>
+        <Router>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/a1" element={<PageA1 />} />
+                <Route path="/a2" element={<PageA2 />} />
+                <Route path="/a3" element={<PageA3 />} />
+                <Route path="/a4" element={<PageA4 />} />
+            </Routes>
+        </Router>
     );
 };
 
