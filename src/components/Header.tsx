@@ -8,7 +8,7 @@ const Header: React.FC = () => {
                 <i className="fas fa-code text-5xl text-violet-500 text-glow"></i>
             </div>
             <h1 className="text-5xl md:text-7xl font-bold text-slate-800 mb-4">
-                <span className="animate-gradient-text text-glow">刘东徽</span>
+                <span className="animate-gradient-text text-glow">你好哇，我是刘东徽</span>
             </h1>
             <div className="tagline text-lg md:text-xl text-slate-500 mb-8 font-mono h-7">
                 <span className="text-pink-500 mr-1">~</span>

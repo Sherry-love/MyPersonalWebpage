@@ -2,8 +2,8 @@ import React from 'react';
 import TerminalWindow from './TerminalWindow.tsx';
 
 const skills = [
-    'C++', 'Python', 'Data Structures & Algorithms', 'Operating Systems',
-    'Machine Learning', 'Deep Learning', 'R', 'SAS'
+    'C++/C', 'Python', 'ML & DL','Data Structures & Algorithms',
+    'Operating Systems','Computer Networking','R', 'SAS'
 ];
 
 const Skills: React.FC = () => {

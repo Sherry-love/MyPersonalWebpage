@@ -39,24 +39,6 @@ const platformData = [
         url: 'https://www.luogu.com.cn/user/1658230',
         buttonText: 'AC'
     },
-    {
-        id: 'zhihu',
-        icon: 'fab fa-zhihu',
-        colorClasses: 'bg-blue-600 hover:bg-blue-700',
-        title: '知乎',
-        description: '我的知乎主页，分享技术见解和学习心得',
-        url: 'https://www.zhihu.com/people/wei-xin-yong-hu-63-11-4',
-        buttonText: '查看知乎(谢邀)'
-    },
-    {
-        id: 'bilibili',
-        icon: 'fab fa-bilibili',
-        colorClasses: 'bg-pink-500 hover:bg-pink-600',
-        title: '哔哩哔哩',
-        description: '我的B站主页',
-        url: 'https://space.bilibili.com/487062571',
-        buttonText: '一键三连'
-    },
 ];
 
 const Platforms: React.FC = () => {
