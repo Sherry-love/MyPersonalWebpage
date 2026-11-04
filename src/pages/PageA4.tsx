@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -268,9 +269,9 @@ const PageA4: React.FC = () => {
                     </div>
 
                     <div className="mt-8 text-center">
-                        <a href="/" className="btn-pearl inline-flex items-center gap-2 px-6 py-3 font-medium rounded-lg">
+                        <Link to="/" className="btn-pearl inline-flex items-center gap-2 px-6 py-3 font-medium rounded-lg">
                             <i className="fas fa-home"></i>返回首页
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

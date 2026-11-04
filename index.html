@@ -29,6 +29,15 @@
     <meta name="twitter:image" content="https://sherry-love.github.io/MyPersonalWebpage/og.jpg" />
 
     <script>
+        // 首帧前先按本地时间点亮「此刻」的光线，避免加载后再跳色
+        (function () {
+            var hour = new Date().getHours();
+            var phase = hour < 5 ? 'night' : hour < 7 ? 'dawn' : hour < 11 ? 'morning' : hour < 16 ? 'day' : hour < 19 ? 'dusk' : 'night';
+            document.documentElement.dataset.phase = phase;
+            document.documentElement.dataset.weather = 'clear';
+        })();
+    </script>
+    <script>
         // GitHub Pages 的 404.html 会把 /a1 这类路径改写成 /?/a1，
         // 这里在应用启动前把它还原成真实路径，供 BrowserRouter 读取。
         (function (location) {

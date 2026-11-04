@@ -1,0 +1,348 @@
+/* =============================================
+   物件化 · 书架
+   ============================================= */
+
+.shelf-section {
+    padding: 4px 0;
+}
+
+.shelf-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 0 10px;
+    margin-bottom: 18px;
+}
+
+.shelf-kicker {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    color: var(--accent-purple);
+    margin-bottom: 4px;
+}
+
+.shelf-heading {
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+}
+
+.shelf-sub {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.shelf-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--ink-purple);
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.shelf-more:hover {
+    border-color: currentColor;
+    color: var(--accent-purple);
+}
+
+/* 书架本体 */
+.project-shelf {
+    position: relative;
+    padding-top: 6px;
+}
+
+.shelf-books {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 0 16px 2px;
+    min-height: 206px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+
+.shelf-book {
+    flex: 0 0 auto;
+    width: 56px;
+    height: 182px;
+    border: 0;
+    padding: 16px 6px 12px;
+    cursor: pointer;
+    border-radius: 3px 3px 2px 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    color: #fffdf8;
+    background:
+        repeating-linear-gradient(180deg, transparent 0 15px, rgba(255, 255, 255, 0.13) 15px 16px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.24), transparent 14%, transparent 82%, rgba(0, 0, 0, 0.26)),
+        var(--book, #a98aa8);
+    box-shadow:
+        0 10px 18px -12px rgba(60, 40, 60, 0.55),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+    transform: rotate(var(--lean, 0deg));
+    transform-origin: 50% 100%;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+
+.shelf-book:hover,
+.shelf-book:focus-visible {
+    transform: translateY(-12px) rotate(0deg);
+    outline: none;
+}
+
+.shelf-book.is-active {
+    transform: translateY(-18px) rotate(0deg);
+    box-shadow:
+        0 20px 28px -16px rgba(60, 40, 60, 0.7),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.32);
+}
+
+.shelf-book-title {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-family: var(--font-serif);
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: 0.06em;
+    max-height: 132px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(60, 40, 60, 0.28);
+}
+
+.shelf-book-year {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    opacity: 0.78;
+}
+
+.shelf-bookend {
+    flex: 0 0 auto;
+    width: 11px;
+    height: 72px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #c3ad93, #947e66);
+    box-shadow: 2px 3px 8px rgba(60, 40, 40, 0.25);
+    transform: translateY(-2px) skewX(-5deg);
+}
+
+/* 书架上的一盆小植物：纯 CSS，凑点生活气 */
+.shelf-plant {
+    flex: 0 0 auto;
+    margin-left: auto;
+    width: 48px;
+    height: 66px;
+    position: relative;
+}
+
+.shelf-plant::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 9px;
+    width: 30px;
+    height: 23px;
+    background: linear-gradient(180deg, #d9a58f, #b47f69);
+    border-radius: 3px 3px 7px 7px;
+    clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%);
+    box-shadow: 0 3px 5px rgba(80, 50, 40, 0.25);
+}
+
+.shelf-plant::after {
+    content: '';
+    position: absolute;
+    bottom: 19px;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background:
+        radial-gradient(ellipse 11px 19px at 28% 72%, #9fb08c 0 62%, transparent 66%),
+        radial-gradient(ellipse 12px 21px at 72% 64%, #b3c19d 0 62%, transparent 66%),
+        radial-gradient(ellipse 13px 23px at 50% 36%, #8ea180 0 62%, transparent 66%);
+}
+
+html.dark .shelf-plant::before {
+    background: linear-gradient(180deg, #8a5f4f, #6b4639);
+}
+
+html.dark .shelf-plant::after {
+    background:
+        radial-gradient(ellipse 11px 19px at 28% 72%, #5c6b54 0 62%, transparent 66%),
+        radial-gradient(ellipse 12px 21px at 72% 64%, #6b7a60 0 62%, transparent 66%),
+        radial-gradient(ellipse 13px 23px at 50% 36%, #4f5d49 0 62%, transparent 66%);
+}
+
+.shelf-plank {
+    height: 18px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #cfb393, #b0906f 55%, #8f7154);
+    box-shadow:
+        0 12px 20px -10px rgba(70, 50, 40, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* 借阅卡 */
+.borrow-card {
+    position: relative;
+    margin-top: 26px;
+    padding: 20px 22px 24px;
+    background:
+        repeating-linear-gradient(180deg, transparent 0 26px, rgba(140, 125, 150, 0.07) 26px 27px),
+        linear-gradient(180deg, #fffdf7, #fbf6ea);
+    border: 1px solid rgba(190, 175, 150, 0.5);
+    border-radius: 4px;
+    box-shadow: 0 18px 34px -26px rgba(80, 60, 70, 0.5);
+    animation: text-fade-in 0.35s ease-out;
+}
+
+.borrow-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--ink-purple);
+    border-bottom: 1px dashed rgba(160, 140, 120, 0.45);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+}
+
+.borrow-title {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.borrow-desc {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.8;
+    max-width: 60ch;
+}
+
+.borrow-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+}
+
+.borrow-tags span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    color: var(--ink-purple);
+    background: var(--tint-purple);
+}
+
+.borrow-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 16px;
+    padding-bottom: 4px;
+}
+
+.borrow-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--ink-purple);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.borrow-actions a:hover {
+    border-color: currentColor;
+}
+
+.borrow-stamp {
+    position: absolute;
+    right: 20px;
+    bottom: 16px;
+    transform: rotate(-8deg);
+    border: 2px solid rgba(178, 72, 72, 0.45);
+    color: rgba(178, 72, 72, 0.65);
+    padding: 2px 9px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+.shelf-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.shelf-empty i {
+    font-size: 26px;
+    color: var(--accent-purple);
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* 暗色模式 */
+html.dark .shelf-book {
+    box-shadow:
+        0 10px 18px -10px rgba(0, 0, 0, 0.6),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+html.dark .shelf-plank {
+    background: linear-gradient(180deg, #6b5847, #55453a 55%, #3f332c);
+    box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+html.dark .shelf-bookend {
+    background: linear-gradient(90deg, #6f5c4a, #4d3f34);
+}
+
+html.dark .borrow-card {
+    background:
+        repeating-linear-gradient(180deg, transparent 0 26px, rgba(255, 255, 255, 0.04) 26px 27px),
+        linear-gradient(180deg, #2a2833, #24222c);
+    border-color: rgba(110, 100, 130, 0.45);
+}
+
+html.dark .borrow-head {
+    border-bottom-color: rgba(140, 128, 155, 0.35);
+}
+
+html.dark .borrow-stamp {
+    border-color: rgba(210, 110, 110, 0.4);
+    color: rgba(210, 120, 120, 0.7);
+}
+
+@media (max-width: 640px) {
+    .shelf-head { align-items: flex-start; }
+    .shelf-book { width: 48px; height: 160px; padding: 12px 5px 10px; }
+    .shelf-book-title { font-size: 11px; max-height: 116px; letter-spacing: 0.04em; }
+    .shelf-book-year { font-size: 9px; }
+    .shelf-books { min-height: 182px; gap: 8px; padding: 0 10px 2px; }
+    .shelf-plank { height: 14px; }
+    .borrow-card { padding: 16px 16px 26px; }
+    .borrow-stamp { right: 14px; bottom: 12px; }
+}

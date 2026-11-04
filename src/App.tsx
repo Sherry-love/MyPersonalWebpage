@@ -8,6 +8,10 @@ import EssayPage from './pages/EssayPage';
 import ProjectShowcase from './pages/ProjectShowcase';
 import ResearchPage from './pages/ResearchPage';
 import NotFound from './pages/NotFound';
+import AmbientMood from './components/AmbientMood';
+import { AmbientProvider } from './ambient/AmbientContext';
+import Snail from './components/Snail';
+import KonamiEgg from './components/KonamiEgg';
 import ParticleEffect from './components/ParticleEffect';
 import SmoothScroll from './components/SmoothScroll';
 import RisingDrops from './components/RisingDrops';
@@ -48,9 +52,12 @@ const AppContent: FC = () => {
             }}
         >
             <AmbientBackground season={season} />
+            <AmbientMood />
             <RisingDrops />
             <MouseGlow />
             <ParticleEffect />
+            <Snail />
+            <KonamiEgg />
             <SmoothScroll />
             <ScrollProgress />
 
@@ -73,9 +80,11 @@ const AppContent: FC = () => {
 
 const App: FC = () => (
     <ThemeProvider>
-        <Router basename={basename}>
-            <AppContent />
-        </Router>
+        <AmbientProvider>
+            <Router basename={basename}>
+                <AppContent />
+            </Router>
+        </AmbientProvider>
     </ThemeProvider>
 );
 

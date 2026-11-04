@@ -1,53 +1,33 @@
-import React, { useCallback, useRef } from 'react';
-import TerminalWindow from './TerminalWindow';
+import React from 'react';
+import type { CSSProperties } from 'react';
 
 const skills = ['C++/C', 'Python', 'ML & DL', 'Data Structures & Algorithms', 'Operating Systems', 'Computer Networking', 'R', 'SAS'];
 
-interface MousePos { x: number; y: number }
+/* 颜料色：都是低饱和的矿物质色 */
+const DAB_COLORS = ['#c9a7c7', '#a8c4c9', '#d9b48f', '#b9c9a3', '#d4a5a5', '#a9b3d4', '#cbb98f', '#b0a8c9'];
 
-const Skills: React.FC = () => {
-    const tagRefs = useRef<(HTMLSpanElement | null)[]>([]);
-    const mouseRef = useRef<MousePos>({ x: -9999, y: -9999 });
+const Skills: React.FC = () => (
+    <section className="palette-board">
+        <span className="palette-hole" aria-hidden="true" />
+        <header className="palette-head">
+            <p className="palette-kicker">MY PALETTE</p>
+            <h2 className="palette-title">调色盘上的技术</h2>
+        </header>
 
-    const handleMouseMove = useCallback((e: React.MouseEvent) => {
-        mouseRef.current = { x: e.clientX, y: e.clientY };
-        tagRefs.current.forEach((el) => {
-            if (!el) return;
-            const rect = el.getBoundingClientRect();
-            const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
-            const dx = mouseRef.current.x - cx, dy = mouseRef.current.y - cy;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const maxDist = 160;
-            if (dist < maxDist) {
-                const strength = (1 - dist / maxDist) * 24;
-                const angle = Math.atan2(dy, dx);
-                el.style.transform = `translate(${-Math.cos(angle)*strength}px,${-Math.sin(angle)*strength}px) scale(${1+(1-dist/maxDist)*0.18})`;
-                el.style.zIndex = '10';
-            } else {
-                el.style.transform = ''; el.style.zIndex = '';
-            }
-        });
-    }, []);
-    const handleMouseLeave = useCallback(() => {
-        tagRefs.current.forEach(el => { if (el) { el.style.transform = ''; el.style.zIndex = ''; } });
-    }, []);
+        <div className="palette-dabs">
+            {skills.map((skill, index) => (
+                <span
+                    key={skill}
+                    className="paint-dab"
+                    style={{ '--dab': DAB_COLORS[index % DAB_COLORS.length] } as CSSProperties}
+                >
+                    {skill}
+                </span>
+            ))}
+        </div>
 
-    return (
-        <TerminalWindow title="tech_stack.json" icon={<i className="fas fa-cogs"></i>}>
-            <div className="skill-tag-container flex flex-wrap gap-3 justify-center py-4" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
-                {skills.map((skill, i) => (
-                    <span key={skill} ref={(el) => { tagRefs.current[i] = el; }}
-                        className="skill-tag tag-badge inline-block font-mono text-sm px-4 py-2 rounded-full cursor-default"
-                        style={{
-                            animationDelay: `${(i * 0.4).toFixed(1)}s`,
-                            transition: 'transform 0.25s ease-out, background-color 0.3s, color 0.3s',
-                        }}>
-                        {skill}
-                    </span>
-                ))}
-            </div>
-        </TerminalWindow>
-    );
-};
+        <span className="palette-brush" aria-hidden="true" />
+    </section>
+);
 
 export default Skills;

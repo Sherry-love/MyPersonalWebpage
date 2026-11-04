@@ -18,6 +18,10 @@ import '@fontsource/jetbrains-mono/latin-300.css';
 import '@fontsource/jetbrains-mono/latin-400.css';
 
 import './index.css';
+import './styles/ambient.css';
+import './styles/shelf.css';
+import './styles/objects.css';
+import './styles/eggs.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

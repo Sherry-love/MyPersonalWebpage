@@ -1,0 +1,86 @@
+/* =============================================
+   此刻的青岛 · 光线与天气
+   ============================================= */
+
+/* 时段色盘：只叠加很轻的一层色温，不压暗整页，保证深色文字始终可读 */
+html[data-phase="dawn"] {
+    --sky: linear-gradient(180deg, rgba(176, 198, 238, 0.26), rgba(255, 229, 231, 0.10) 55%, transparent 80%);
+}
+
+html[data-phase="morning"] {
+    --sky: linear-gradient(180deg, rgba(226, 238, 250, 0.20), rgba(255, 246, 229, 0.10) 55%, transparent 80%);
+}
+
+html[data-phase="day"] {
+    --sky: linear-gradient(180deg, rgba(255, 251, 238, 0.16), transparent 62%);
+}
+
+html[data-phase="dusk"] {
+    --sky: linear-gradient(180deg, rgba(248, 196, 172, 0.30), rgba(235, 186, 214, 0.16) 52%, transparent 80%);
+}
+
+html[data-phase="night"] {
+    --sky: linear-gradient(180deg, rgba(92, 106, 160, 0.18), rgba(86, 84, 132, 0.07) 52%, transparent 80%);
+}
+
+/* 暗色模式下光线收敛一点，避免和深色主题打架 */
+html.dark[data-phase="dawn"] { --sky: linear-gradient(180deg, rgba(92, 108, 156, 0.34), transparent 80%); }
+html.dark[data-phase="morning"] { --sky: linear-gradient(180deg, rgba(96, 106, 140, 0.26), transparent 80%); }
+html.dark[data-phase="day"] { --sky: linear-gradient(180deg, rgba(40, 44, 60, 0.30), transparent 75%); }
+html.dark[data-phase="dusk"] { --sky: linear-gradient(180deg, rgba(120, 78, 96, 0.34), transparent 80%); }
+html.dark[data-phase="night"] { --sky: linear-gradient(180deg, rgba(34, 38, 68, 0.55), transparent 82%); }
+
+.ambient-sky {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: var(--sky, none);
+}
+
+/* 天气叠色 */
+html[data-weather="rain"] .ambient-sky,
+html[data-weather="thunder"] .ambient-sky {
+    background-image: var(--sky), linear-gradient(180deg, rgba(118, 132, 158, 0.07), transparent 68%);
+}
+
+html[data-weather="snow"] .ambient-sky {
+    background-image: var(--sky), linear-gradient(180deg, rgba(230, 236, 248, 0.20), transparent 72%);
+}
+
+html[data-weather="fog"] .ambient-sky {
+    background-image: var(--sky), linear-gradient(180deg, rgba(222, 224, 232, 0.20), transparent 78%);
+}
+
+/* 雾带 */
+.fog-band {
+    display: none;
+    position: absolute;
+    width: 75vw;
+    height: 28vh;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(244, 246, 250, 0.50), transparent 70%);
+    filter: blur(34px);
+    animation: fog-drift 42s ease-in-out infinite;
+}
+
+.is-fog .fog-band { display: block; }
+.fog-band-1 { top: 10%; left: -12%; }
+.fog-band-2 { bottom: 6%; right: -18%; animation-duration: 58s; animation-direction: reverse; }
+
+html.dark .fog-band {
+    background: radial-gradient(ellipse at center, rgba(120, 130, 152, 0.28), transparent 70%);
+}
+
+@keyframes fog-drift {
+    0%, 100% { transform: translateX(0) scale(1); }
+    50%      { transform: translateX(6vw) scale(1.06); }
+}
+
+/* 雨 / 雪画布：在内容层之下，透过毛玻璃卡片能看到 */
+.weather-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+}

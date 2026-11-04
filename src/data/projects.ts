@@ -1,6 +1,8 @@
 export interface Project {
     id: string;
     title: string;
+    /** 书脊上的短标题（不填则用 title），太长会把书脊挤爆 */
+    spineTitle?: string;
     category: 'personal' | 'course' | 'opensource';
     description: string;
     techs: string[];
@@ -14,6 +16,7 @@ export const projects: Project[] = [
     {
         id: 'personal-webpage',
         title: '印象派花园 · 个人网页',
+        spineTitle: '印象派花园',
         category: 'personal',
         description: '基于 React + TypeScript 构建的个人作品集网站，以印象派花园为设计灵感，实现毛玻璃卡片、主题切换、Canvas 代码花园、平滑滚动等交互效果。',
         techs: ['React', 'TypeScript', 'Tailwind CSS', 'Vite', 'Lenis'],
@@ -50,6 +53,7 @@ export const projects: Project[] = [
     {
         id: 'leetcode-solutions',
         title: 'LeetCode 题解集',
+        spineTitle: 'LeetCode 题解',
         category: 'opensource',
         description: '50+ 道算法题解，涵盖动态规划、图论、二叉树、贪心等专题，附带思路注释和复杂度分析。',
         techs: ['C++', 'Python'],

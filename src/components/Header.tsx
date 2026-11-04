@@ -1,8 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import TypingEffect from './TypingEffect';
+import { useAmbient, type TimePhase, type WeatherKind } from '../ambient/AmbientContext';
+
+const WEATHER_ICON: Record<WeatherKind, string> = {
+    clear: 'fa-sun',
+    cloudy: 'fa-cloud',
+    fog: 'fa-smog',
+    rain: 'fa-cloud-rain',
+    snow: 'fa-snowflake',
+    thunder: 'fa-cloud-bolt',
+};
+
+function weatherIcon(weather: WeatherKind, phase: TimePhase): string {
+    if (weather === 'clear' && (phase === 'night' || phase === 'dawn')) return 'fa-moon';
+    return WEATHER_ICON[weather];
+}
 
 const Header: React.FC = () => {
     const [scrollY, setScrollY] = useState(0);
+    const ambient = useAmbient();
 
     useEffect(() => {
         const handleScroll = () => setScrollY(window.scrollY);
@@ -45,9 +61,15 @@ const Header: React.FC = () => {
                     <i className="fas fa-envelope" style={{ color: 'var(--accent-purple)' }}></i>
                     <span>2594188081@qq.com</span>
                 </div>
-                <div className="contact-pill flex items-center gap-2 px-4 py-2 rounded-full">
-                    <i className="fas fa-map-marker-alt" style={{ color: 'var(--accent-purple)' }}></i>
-                    <span>中国 · 青岛</span>
+                <div className="contact-pill flex items-center gap-2 px-4 py-2 rounded-full"
+                    title={`${ambient.phaseLabel} · 天气数据来自 open-meteo`}>
+                    <i className={`fas ${weatherIcon(ambient.weather, ambient.phase)}`} style={{ color: 'var(--accent-purple)' }}></i>
+                    <span>
+                        此刻 · {ambient.city} ·{' '}
+                        {ambient.ready
+                            ? `${ambient.weatherLabel}${ambient.temperature !== null ? ` ${Math.round(ambient.temperature)}°C` : ''}`
+                            : ambient.phaseLabel}
+                    </span>
                 </div>
                 <div className="contact-pill flex items-center gap-2 px-4 py-2 rounded-full">
                     <i className="fas fa-university" style={{ color: 'var(--accent-purple)' }}></i>

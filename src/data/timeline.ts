@@ -53,6 +53,10 @@ export const timeline: TimelineEntry[] = [
         date: '2026年11月4日',
         content: '字体图标本地化、真实贡献数据、Pages 自动部署。',
     },
+    {
+        date: '2026年11月5日',
+        content: '新增「此刻的青岛」光线与天气层；五个板块换成信纸、调色盘、奖状墙、拍立得和书架；藏了油画滤镜、萤火虫和一只蜗牛。',
+    },
 ];
 
 export const lastUpdated = timeline[timeline.length - 1]?.date ?? '';
