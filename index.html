@@ -1,73 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dreamy Developer Portfolio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
-        .text-glow {
-            text-shadow: 0 0 8px currentColor, 0 0 12px rgba(196, 181, 253, 0.5);
-        }
-        .animate-gradient-text {
-            background: linear-gradient(90deg, #f9a8d4, #c4b5fd, #a5b4fc, #f9a8d4);
-            background-size: 200% auto;
-            background-clip: text;
-            -webkit-background-clip: text; /* For Safari compatibility */
-            color: transparent;
-            animation: gradient-animation 4s linear infinite;
-        }
 
-        @keyframes gradient-animation {
-            0% {
-                background-position: 0% 50%;
-            }
-            100% {
-                background-position: 200% 50%;
-            }
-        }
+    <title>刘东徽 · 印象派花园</title>
+    <meta name="description" content="刘东徽（Anthony）的个人主页。青岛大学计算机科学与技术专业，记录技术栈、项目、随笔与成长，以印象派花园为设计意象。" />
+    <meta name="author" content="刘东徽" />
+    <meta name="theme-color" content="#faf7f4" />
 
-        @keyframes pulse-fade {
-            0%, 100% {
-                opacity: 0.7;
-                /* transform property removed to prevent overriding inline positioning */
-            }
-            50% {
-                opacity: 1;
-            }
-        }
+    <link rel="icon" type="image/png" sizes="32x32" href="%BASE_URL%favicon-32.png" />
+    <link rel="icon" href="%BASE_URL%favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png" />
 
-        @keyframes text-fade-in {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
+    <!-- 社交分享卡片 -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="刘东徽 · 印象派花园" />
+    <meta property="og:title" content="刘东徽 · 印象派花园" />
+    <meta property="og:description" content="青岛大学计算机科学与技术专业。一个用代码慢慢搭起来的花园。" />
+    <meta property="og:url" content="https://sherry-love.github.io/MyPersonalWebpage/" />
+    <meta property="og:image" content="https://sherry-love.github.io/MyPersonalWebpage/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="刘东徽 · 印象派花园" />
+    <meta name="twitter:description" content="青岛大学计算机科学与技术专业。一个用代码慢慢搭起来的花园。" />
+    <meta name="twitter:image" content="https://sherry-love.github.io/MyPersonalWebpage/og.jpg" />
+
+    <script>
+        // GitHub Pages 的 404.html 会把 /a1 这类路径改写成 /?/a1，
+        // 这里在应用启动前把它还原成真实路径，供 BrowserRouter 读取。
+        (function (location) {
+            if (location.search[1] === '/') {
+                var decoded = location.search
+                    .slice(1)
+                    .split('&')
+                    .map(function (segment) { return segment.replace(/~and~/g, '&'); })
+                    .join('?');
+                window.history.replaceState(
+                    null,
+                    '',
+                    location.pathname.slice(0, -1) + decoded + location.hash
+                );
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
-    <script type="importmap">
-        {
-          "imports": {
-            "react": "https://esm.sh/react@^19.2.3",
-            "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-            "react/": "https://esm.sh/react@^19.2.3/",
-            "@google/genai": "https://esm.sh/@google/genai@^1.35.0"
-          }
-        }
+        })(window.location);
     </script>
 </head>
 <body>

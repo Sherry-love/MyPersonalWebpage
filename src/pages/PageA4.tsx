@@ -1,251 +1,275 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import type { Components } from 'react-markdown';
+import readmeRaw from '../../README.md?raw';
+import { lastUpdated, timeline, type TimelineEntry } from '../data/timeline';
 
-const PageA4: React.FC = () => {
-    const [markdownContent, setMarkdownContent] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [lastUpdated, setLastUpdated] = useState<string>('');
+// ---- 流态旋转时间轴 ----
+const FluidTimeline: React.FC<{ entries: TimelineEntry[] }> = ({ entries }) => {
+    const n = entries.length;
+    const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+    const [rotation, setRotation] = useState(0);
+    const pausedRef = useRef(false);
+    // 手机上圆形轨道放不下卡片，降级为竖直时间轴
+    const [isNarrow, setIsNarrow] = useState(
+        () => typeof window !== 'undefined' && window.innerWidth < 768
+    );
 
-    // 从public文件夹加载Markdown文件
     useEffect(() => {
-        fetch('/website-intro.md')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('无法加载Markdown文件');
-                }
-                return response.text();
-            })
-            .then(text => {
-                setMarkdownContent(text);
-                setIsLoading(false);
-
-                // 尝试从Markdown中提取最后更新日期
-                const dateMatch = text.match(/(\d{4}年\d{1,2}月\d{1,2}日)/g);
-                if (dateMatch && dateMatch.length > 0) {
-                    // 取最后一个日期作为最后更新
-                    setLastUpdated(dateMatch[dateMatch.length - 1]);
-                }
-            })
-            .catch(error => {
-                console.error('加载Markdown文件失败:', error);
-                setMarkdownContent('# 加载失败\n\n抱歉，无法加载网站介绍文档。');
-                setIsLoading(false);
-            });
+        const onResize = () => setIsNarrow(window.innerWidth < 768);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
     }, []);
 
+    // JS 驱动旋转，每 50ms 更新，悬停时暂停
+    useEffect(() => {
+        if (isNarrow) return;
+        const interval = setInterval(() => {
+            if (!pausedRef.current) {
+                setRotation(prev => prev + 0.006);
+            }
+        }, 50);
+        return () => clearInterval(interval);
+    }, [isNarrow]);
+
+    if (n === 0) return null;
+
+    if (isNarrow) {
+        return (
+            <ol className="relative pl-7">
+                <div
+                    className="absolute left-[5px] top-2 bottom-2 w-px"
+                    style={{ background: 'linear-gradient(180deg, var(--accent-purple), var(--accent-pink))' }}
+                />
+                {entries.map((entry, i) => (
+                    <li key={`${entry.date}-${i}`} className="relative pb-6 last:pb-0">
+                        <span
+                            className="absolute -left-7 top-1.5 w-3 h-3 rounded-full border-2"
+                            style={{ borderColor: 'var(--accent-purple)', background: 'var(--mist-base)' }}
+                        />
+                        <div className="font-mono text-xs mb-1" style={{ color: 'var(--accent-purple)' }}>
+                            {entry.date}
+                        </div>
+                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                            {entry.content}
+                        </p>
+                    </li>
+                ))}
+            </ol>
+        );
+    }
+
+    const R = 300;
+    const center = R + 80;
+    const cx = '50%';
+    const cy = '50%';
+
     return (
-        <div className="bg-rose-50 min-h-screen text-slate-700 font-sans">
-            <Navbar />
-            <div className="container mx-auto p-4 md:p-8 pt-24">
-                <div className="max-w-4xl mx-auto">
-                    {/* 页面标题 */}
-                    <div className="mb-8 text-center">
-                        <h1 className="text-4xl font-bold text-slate-800 mb-2">我的个人网页</h1>
-                        <p className="text-slate-500">关于这个项目的设计理念、技术栈和开发历程</p>
-                        {lastUpdated && (
-                            <div className="mt-4 inline-flex items-center gap-2 bg-violet-50 text-violet-700 px-4 py-2 rounded-full text-sm">
-                                <i className="fas fa-calendar-alt"></i>
-                                <span>最后更新: {lastUpdated}</span>
-                            </div>
-                        )}
-                    </div>
+        <div style={{ position: 'relative', width: '100%', height: center * 2, overflow: 'hidden' }}>
+            {/* 左半圆（CSS radial-gradient，圆心在右边缘，日/夜适配） */}
+            <div className="timeline-left-overlay" style={{
+                position: 'absolute', left: 0, top: 0,
+                width: '50%', height: '100%',
+                zIndex: 11,
+            }} />
 
-                    {/* 主要内容卡片 */}
-                    <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
-                        {isLoading ? (
-                            <div className="flex justify-center items-center h-64">
-                                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-500"></div>
-                                <p className="ml-4 text-slate-600">正在加载文档...</p>
-                            </div>
-                        ) : (
-                            <div className="markdown-content">
-                                <ReactMarkdown
-                                    remarkPlugins={[remarkGfm]}
-                                    components={{
-                                        // 代码块样式 - 修复类型问题
-                                        code: ({node, className, children, ...props}: any) => {
-                                            const isInline = !className?.includes('language-');
 
-                                            if (isInline) {
-                                                return (
-                                                    <code className="bg-violet-100 text-violet-800 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
-                                                        {children}
-                                                    </code>
-                                                );
-                                            }
+            {/* 中心白圆（独立层，跨越左右，不被左遮罩遮挡） */}
+            <div style={{
+                position: 'absolute',
+                left: cx, top: cy,
+                width: R * 0.5, height: R * 0.5,
+                transform: 'translate(-50%, -50%)',
+                borderRadius: '50%',
+                background: '#FFFFFF',
+                border: '1px solid var(--pearl-border)',
+                zIndex: 12,
+            }} />
 
-                                            return (
-                                                <div className="my-4 overflow-hidden rounded-lg border border-slate-200">
-                                                    <pre className="bg-slate-50 text-slate-800 p-4 overflow-auto text-sm">
-                                                        <code className="font-mono" {...props}>
-                                                            {children}
-                                                        </code>
-                                                    </pre>
-                                                </div>
-                                            );
-                                        },
-                                        // 标题样式
-                                        h1: ({node, children, ...props}: any) => (
-                                            <h1 className="text-3xl font-bold text-slate-800 mt-8 mb-6 pb-3 border-b border-slate-200 flex items-center gap-3" {...props}>
-                                                <i className="fas fa-star text-violet-500 text-xl"></i>
-                                                {children}
-                                            </h1>
-                                        ),
-                                        h2: ({node, children, ...props}: any) => (
-                                            <h2 className="text-2xl font-bold text-slate-800 mt-8 mb-4 flex items-center gap-3" {...props}>
-                                                <i className="fas fa-file-alt text-pink-500"></i>
-                                                {children}
-                                            </h2>
-                                        ),
-                                        h3: ({node, children, ...props}: any) => (
-                                            <h3 className="text-xl font-bold text-slate-700 mt-6 mb-3" {...props}>
-                                                {children}
-                                            </h3>
-                                        ),
-                                        // 段落
-                                        p: ({node, children, ...props}: any) => (
-                                            <p className="text-slate-700 leading-relaxed mb-4 text-lg" {...props}>
-                                                {children}
-                                            </p>
-                                        ),
-                                        // 列表
-                                        ul: ({node, children, ...props}: any) => (
-                                            <ul className="list-disc pl-6 mb-4 text-slate-700 space-y-2" {...props}>
-                                                {children}
-                                            </ul>
-                                        ),
-                                        ol: ({node, children, ...props}: any) => (
-                                            <ol className="list-decimal pl-6 mb-4 text-slate-700 space-y-2" {...props}>
-                                                {children}
-                                            </ol>
-                                        ),
-                                        li: ({node, children, ...props}: any) => (
-                                            <li className="mb-1.5" {...props}>
-                                                {children}
-                                            </li>
-                                        ),
-                                        // 引用块 - 特别为你的名言设计
-                                        blockquote: ({node, children, ...props}: any) => (
-                                            <div className="my-6">
-                                                <div className="relative border-l-4 border-violet-500 pl-6 py-2 bg-violet-50/50 rounded-r-lg">
-                                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-violet-500 to-pink-500"></div>
-                                                    <blockquote className="italic text-slate-700 text-lg leading-relaxed" {...props}>
-                                                        {children}
-                                                    </blockquote>
-                                                    <div className="mt-3 text-sm text-slate-500 flex items-center gap-2">
-                                                        <i className="fas fa-quote-right"></i>
-                                                        <span>摘自贴吧网友</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ),
-                                        // 链接
-                                        a: ({node, children, ...props}: any) => (
-                                            <a className="text-violet-600 hover:text-violet-800 underline font-medium" {...props}>
-                                                {children}
-                                            </a>
-                                        ),
-                                        // 强调文本
-                                        strong: ({node, children, ...props}: any) => (
-                                            <strong className="font-bold text-slate-800" {...props}>
-                                                {children}
-                                            </strong>
-                                        ),
-                                        // 表格
-                                        table: ({node, children, ...props}: any) => (
-                                            <table className="min-w-full border-collapse border border-slate-300 my-4 rounded-lg overflow-hidden" {...props}>
-                                                {children}
-                                            </table>
-                                        ),
-                                        th: ({node, children, ...props}: any) => (
-                                            <th className="border border-slate-300 bg-slate-100 p-3 text-left font-semibold text-slate-800" {...props}>
-                                                {children}
-                                            </th>
-                                        ),
-                                        td: ({node, children, ...props}: any) => (
-                                            <td className="border border-slate-300 p-3" {...props}>
-                                                {children}
-                                            </td>
-                                        ),
-                                        // 水平线
-                                        hr: ({node, ...props}: any) => <hr className="my-8 border-t border-slate-300" {...props} />,
-                                    }}
-                                >
-                                    {markdownContent}
-                                </ReactMarkdown>
+            {/* 圆环1：紧挨白圆，宽度0.6，深淡紫，仅右半 */}
+            <div style={{
+                position: 'absolute',
+                left: cx, top: cy,
+                width: 224, height: 224,
+                transform: 'translate(-50%, -50%)',
+                borderRadius: '50%',
+                border: '42px solid rgba(160,140,180,0.45)',
+                clipPath: 'inset(0 0 0 50%)',
+                zIndex: 3,
+            }} />
 
-                                {/* 添加时间线效果 - 专门为"简单记录"部分 */}
-                                <div className="mt-12 pt-8 border-t border-slate-200">
-                                    <h3 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
-                                        <i className="fas fa-history text-green-500"></i>
-                                        开发时间线
-                                    </h3>
-                                    <div className="relative pl-8">
-                                        {/* 时间线垂直线 */}
-                                        <div className="absolute left-[15px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-violet-500 to-pink-500"></div>
+            {/* 圆环2：紧接环1，宽度1.2，更淡紫，仅右半 */}
+            <div style={{
+                position: 'absolute',
+                left: cx, top: cy,
+                width: 392, height: 392,
+                transform: 'translate(-50%, -50%)',
+                borderRadius: '50%',
+                border: '84px solid rgba(190,180,210,0.25)',
+                clipPath: 'inset(0 0 0 50%)',
+                zIndex: 3,
+            }} />
 
-                                        {/* 从Markdown中提取的日期记录 */}
-                                        {markdownContent
-                                            .split('\n')
-                                            .filter(line => line.includes('年') && line.includes('月') && line.includes('日'))
-                                            .map((line, index) => {
-                                                const dateMatch = line.match(/(\d{4}年\d{1,2}月\d{1,2}日)/);
-                                                const content = line.replace(/^\d+\.\s*/, '').replace(/(\d{4}年\d{1,2}月\d{1,2}日\s*)/, '');
+            {/* 旋转容器（仅公转，不自转） */}
+            <div
+                onMouseEnter={() => { pausedRef.current = true; }}
+                onMouseLeave={() => { pausedRef.current = false; }}
+                style={{
+                    position: 'absolute',
+                    left: cx, top: cy,
+                    width: 0, height: 0,
+                    transform: `rotate(${rotation}rad)`,
+                    zIndex: 4,
+                }}
+            >
+                {entries.map((entry, i) => {
+                    const angleStep = (2 * Math.PI) / n;
+                    const baseAngle = -Math.PI / 2 + i * angleStep;
+                    const currentAngle = baseAngle + rotation;
+                    const normalizedAngle = ((currentAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+                    const cosA = Math.cos(normalizedAngle);
+                    const visible = cosA > 0.05;
+                    const x = R * Math.cos(baseAngle);
+                    const y = R * Math.sin(baseAngle);
+                    const isHovered = hoveredIdx === i;
+                    const depth = (cosA + 1) / 2;
 
-                                                if (!dateMatch) return null;
+                    if (!visible) return null;
 
-                                                return (
-                                                    <div key={index} className="relative mb-6 last:mb-0">
-                                                        {/* 时间线节点 */}
-                                                        <div className="absolute left-[-26px] top-1.5 w-6 h-6 rounded-full bg-white border-4 border-violet-500 z-10"></div>
-
-                                                        <div className="ml-4">
-                                                            <div className="font-bold text-violet-700 mb-1 flex items-center gap-2">
-                                                                <i className="fas fa-calendar-day text-sm"></i>
-                                                                {dateMatch[0]}
-                                                            </div>
-                                                            <p className="text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-200">
-                                                                {content}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })
-                                        }
-                                    </div>
-                                </div>
-
-                                {/* 感谢信息 */}
-                                <div className="mt-12 p-6 bg-gradient-to-r from-violet-50 to-pink-50 rounded-xl border border-violet-200">
-                                    <div className="flex items-start gap-4">
-                                        <div className="text-3xl text-violet-600">
-                                            <i className="fas fa-heart"></i>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-xl font-bold text-slate-800 mb-2">特别感谢</h4>
-                                            <p className="text-slate-700 mb-2">
-                                                感谢 Gemini 和 DeepSeek 的帮助，让这个项目能够顺利实现。
-                                            </p>
-                                            <p className="text-sm text-slate-500">
-                                                如果有任何错误或者bug，请您联系我修改，感谢！
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* 返回首页按钮 */}
-                    <div className="mt-8 text-center">
-                        <a
-                            href="/"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-500 to-pink-500 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-300"
+                    return (
+                        <div
+                            key={i}
+                            onMouseEnter={() => { pausedRef.current = true; setHoveredIdx(i); }}
+                            onMouseLeave={() => { pausedRef.current = false; setHoveredIdx(null); }}
+                            className="glass-card"
+                            style={{
+                                position: 'absolute',
+                                left: x, top: y,
+                                transform: `translate(-50%, -50%) rotate(${-rotation}rad) scale(${isHovered ? 1.06 : 0.85 + depth * 0.15})`,
+                                width: 200,
+                                padding: '8px 14px',
+                                opacity: isHovered ? 1 : 0.35 + depth * 0.65,
+                                zIndex: isHovered ? 10 : Math.round(depth * 5),
+                                transition: 'opacity 0.6s, transform 0.6s',
+                                cursor: 'default',
+                            }}
                         >
-                            <i className="fas fa-home"></i>
-                            返回首页
+                            <div className="font-mono text-xs mb-1" style={{ color: 'var(--accent-purple)' }}>
+                                {entry.date}
+                            </div>
+                            {entry.content && (
+                                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                                    {entry.content}
+                                </p>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+// README 是这一页的正文来源；时间轴已经独立到 src/data/timeline.ts，
+// 这里只需要去掉 README 里与时间轴重复的「简单记录」段落。
+const readmeBody = (() => {
+    const heading = '\n## 简单记录';
+    const idx = readmeRaw.indexOf(heading);
+    return idx !== -1 ? readmeRaw.slice(0, idx).trimEnd() : readmeRaw;
+})();
+
+const PageA4: React.FC = () => {
+    const markdownComponents: Components = {
+        code: ({ className, children, ...props }) => {
+            const isInline = !className?.includes('language-');
+            if (isInline) return <code className="tag-badge px-1.5 py-0.5 rounded text-sm font-mono" {...props}>{children}</code>;
+            return (
+                <div className="my-4 overflow-hidden rounded-lg border" style={{ borderColor: 'var(--pearl-border)' }}>
+                    <pre className="p-4 overflow-auto text-sm" style={{ background: 'var(--mist-purple)', color: 'var(--text-primary)' }}>
+                        <code className="font-mono" {...props}>{children}</code>
+                    </pre>
+                </div>
+            );
+        },
+        h1: ({ children, ...props }) => (
+            <h1 className="text-3xl font-serif mt-8 mb-6 pb-3 border-b flex items-center gap-3" style={{ borderColor:'var(--pearl-border)',color:'var(--text-primary)' }} {...props}>
+                <i className="fas fa-star text-xl" style={{ color:'var(--accent-purple)' }}></i>{children}
+            </h1>
+        ),
+        h2: ({ children, ...props }) => (
+            <h2 className="text-2xl font-serif mt-8 mb-4 flex items-center gap-3" style={{ color:'var(--text-primary)' }} {...props}>
+                <i className="fas fa-file-alt" style={{ color:'var(--accent-pink)' }}></i>{children}
+            </h2>
+        ),
+        h3: ({ children, ...props }) => <h3 className="text-xl font-serif mt-6 mb-3" style={{ color:'var(--text-primary)' }} {...props}>{children}</h3>,
+        p: ({ children, ...props }) => <p className="leading-relaxed mb-4 text-lg" style={{ color:'var(--text-secondary)' }} {...props}>{children}</p>,
+        ul: ({ children, ...props }) => <ul className="list-disc pl-6 mb-4 space-y-2" style={{ color:'var(--text-secondary)' }} {...props}>{children}</ul>,
+        ol: ({ children, ...props }) => <ol className="list-decimal pl-6 mb-4 space-y-2" style={{ color:'var(--text-secondary)' }} {...props}>{children}</ol>,
+        li: ({ children, ...props }) => <li className="mb-1.5" {...props}>{children}</li>,
+        blockquote: ({ children, ...props }) => (
+            <div className="my-6">
+                <div className="relative border-l-4 pl-6 py-2 rounded-r-lg" style={{ borderColor:'var(--accent-purple)',background:'rgba(232,226,240,0.25)' }}>
+                    <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background:'linear-gradient(180deg,var(--accent-purple),var(--accent-pink))' }}></div>
+                    <blockquote className="italic text-lg leading-relaxed" style={{ color:'var(--text-secondary)' }} {...props}>{children}</blockquote>
+                    <div className="mt-3 text-sm flex items-center gap-2" style={{ color:'var(--text-secondary)' }}>
+                        <i className="fas fa-quote-right"></i><span>摘自贴吧网友</span>
+                    </div>
+                </div>
+            </div>
+        ),
+        a: ({ children, ...props }) => <a style={{ color:'var(--accent-purple)' }} className="underline font-medium" target="_blank" rel="noopener noreferrer" {...props}>{children}</a>,
+        strong: ({ children, ...props }) => <strong style={{ color:'var(--text-primary)' }} {...props}>{children}</strong>,
+        table: ({ children, ...props }) => <table className="min-w-full border-collapse my-4 rounded-lg overflow-hidden" style={{ borderColor:'var(--pearl-border)' }} {...props}>{children}</table>,
+        th: ({ children, ...props }) => <th className="p-3 text-left font-semibold" style={{ background:'var(--mist-purple)',color:'var(--text-primary)',borderColor:'var(--pearl-border)' }} {...props}>{children}</th>,
+        td: ({ children, ...props }) => <td className="p-3" style={{ borderColor:'var(--pearl-border)' }} {...props}>{children}</td>,
+        hr: (props) => <hr className="my-8 border-t" style={{ borderColor:'var(--pearl-border)' }} {...props} />,
+    };
+
+    return (
+        <div className="min-h-screen" style={{ background: 'transparent' }}>
+            <Navbar />
+            <div className="container mx-auto p-4 md:p-8" style={{ paddingTop: '6rem' }}>
+                <div className="max-w-4xl mx-auto">
+                    <div className="mb-8 text-center">
+                        <h1 className="text-4xl font-serif mb-2" style={{ color:'var(--text-primary)' }}>我的个人网页</h1>
+                        <p style={{ color:'var(--text-secondary)' }}>关于这个项目的设计理念、技术栈和开发历程</p>
+                        {lastUpdated && (
+                            <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm tag-badge">
+                                <i className="fas fa-calendar-alt"></i><span>最后更新: {lastUpdated}</span>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="glass-card p-6 md:p-8">
+                        <div>
+                            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{readmeBody}</ReactMarkdown>
+
+                                <div className="mt-12 pt-8 border-t" style={{ borderColor:'var(--pearl-border)' }}>
+                                    <h3 className="text-2xl font-serif mb-8 flex items-center gap-3" style={{ color:'var(--text-primary)' }}>
+                                        <i className="fas fa-history" style={{ color:'var(--accent-purple)' }}></i>开发时间线
+                                    </h3>
+                                    {/* 流态旋转时间轴 */}
+                                    <FluidTimeline entries={timeline} />
+                                </div>
+
+                                <div className="mt-12 p-6 rounded-xl border" style={{ background:'linear-gradient(135deg,rgba(232,226,240,0.25),rgba(240,228,224,0.25))',borderColor:'var(--accent-purple)' }}>
+                                    <div className="flex items-start gap-4">
+                                        <div className="text-3xl" style={{ color:'var(--accent-purple)' }}><i className="fas fa-heart"></i></div>
+                                        <div>
+                                            <h4 className="text-xl font-serif mb-2" style={{ color:'var(--text-primary)' }}>特别感谢</h4>
+                                            <p className="mb-2" style={{ color:'var(--text-secondary)' }}>感谢 Gemini 和 DeepSeek 的帮助，让这个项目能够顺利实现。</p>
+                                            <p className="text-sm" style={{ color:'var(--text-secondary)' }}>如果有任何错误或者bug，请您联系我修改，感谢！</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+
+                    <div className="mt-8 text-center">
+                        <a href="/" className="btn-pearl inline-flex items-center gap-2 px-6 py-3 font-medium rounded-lg">
+                            <i className="fas fa-home"></i>返回首页
                         </a>
                     </div>
                 </div>

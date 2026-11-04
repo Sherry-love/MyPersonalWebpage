@@ -1,32 +1,82 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { ThemeProvider } from './components/ThemeContext';
 import Home from './pages/Home';
-import PageA1 from './pages/PageA1';
-import PageA2 from './pages/PageA2';
-import PageA3 from './pages/PageA3';
+import PagePlaceholder from './pages/PagePlaceholder';
 import PageA4 from './pages/PageA4';
+import EssayPage from './pages/EssayPage';
+import ProjectShowcase from './pages/ProjectShowcase';
+import ResearchPage from './pages/ResearchPage';
+import NotFound from './pages/NotFound';
 import ParticleEffect from './components/ParticleEffect';
+import SmoothScroll from './components/SmoothScroll';
+import RisingDrops from './components/RisingDrops';
+import AmbientBackground from './components/AmbientBackground';
+import RouteTransition from './components/RouteTransition';
+import ScrollProgress from './components/ScrollProgress';
+import MouseGlow from './components/MouseGlow';
+import type { FC } from 'react';
 
-const App: React.FC = () => {
+const seasonMap: Record<string, 'spring' | 'autumn' | 'morning' | 'default'> = {
+    '/': 'spring',
+    '/a3': 'autumn',
+    '/a4': 'morning',
+};
+
+// 部署到 GitHub Pages 的 /MyPersonalWebpage/ 子路径时，路由要带上同样的前缀
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+
+const AppContent: FC = () => {
+    const location = useLocation();
+    const season = seasonMap[location.pathname] || 'default';
+
+    // 页面加载入场状态
+    const [isAppReady, setIsAppReady] = useState(false);
+    useEffect(() => {
+        const timer = setTimeout(() => setIsAppReady(true), 60);
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
-        <div className="relative min-h-screen text-slate-700 font-sans">
-            {/* 全局粒子特效 - 放在最外层 */}
+        <div
+            className="relative min-h-screen"
+            style={{
+                color: 'var(--text-primary)',
+                opacity: isAppReady ? 1 : 0,
+                filter: isAppReady ? 'blur(0px)' : 'blur(3px)',
+                transition: 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+        >
+            <AmbientBackground season={season} />
+            <RisingDrops />
+            <MouseGlow />
             <ParticleEffect />
+            <SmoothScroll />
+            <ScrollProgress />
 
-            {/* 页面内容 */}
             <div className="relative z-10">
-                <Router>
-                    <Routes>
+                <RouteTransition key={location.pathname}>
+                    <Routes location={location}>
                         <Route path="/" element={<Home />} />
-                        <Route path="/a1" element={<PageA1 />} />
-                        <Route path="/a2" element={<PageA2 />} />
-                        <Route path="/a3" element={<PageA3 />} />
+                        <Route path="/a1" element={<ResearchPage />} />
+                        <Route path="/a2" element={<ProjectShowcase />} />
+                        <Route path="/a3" element={<EssayPage />} />
+                        <Route path="/photos" element={<PagePlaceholder />} />
                         <Route path="/a4" element={<PageA4 />} />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
-                </Router>
+                </RouteTransition>
             </div>
         </div>
     );
 };
+
+const App: FC = () => (
+    <ThemeProvider>
+        <Router basename={basename}>
+            <AppContent />
+        </Router>
+    </ThemeProvider>
+);
 
 export default App;

@@ -110,3 +110,9 @@ dist
 dist-ssr
 
 draft.md
+
+# 本地验证产物 / 工作日志
+shots/
+.workbuddy/
+scripts/_*
+__pycache__/

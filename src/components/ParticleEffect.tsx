@@ -1,60 +1,52 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
+
+const particleColors = ['#c4b5d5', '#d4b8c0', '#b8c8d8', '#e8dcc8', '#e8e2f0', '#e1ecec'];
 
 const ParticleEffect: React.FC = () => {
-    const particleColors = ['#c4b5fd', '#f9a8d4', '#a5b4fc','#CFCCE3'
-        ,'#B6B3D6','#F6DFD6','#F8B2A2','#F1837A'];
+    const particlesRef = useRef<HTMLDivElement[]>([]);
+    const lastPosRef = useRef({ x: 0, y: 0 });
 
     const createParticle = useCallback((x: number, y: number) => {
+        // 节流：鼠标移动小于 8px 不生成粒子
+        const dx = x - lastPosRef.current.x;
+        const dy = y - lastPosRef.current.y;
+        if (Math.sqrt(dx * dx + dy * dy) < 8) return;
+        lastPosRef.current = { x, y };
+
         const particle = document.createElement('div');
-        document.body.appendChild(particle);
-
         const size = Math.floor(Math.random() * 10 + 5);
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.position = 'fixed';
-        particle.style.top = `${y}px`;
-        particle.style.left = `${x}px`;
-        particle.style.borderRadius = '50%';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '9999';
-        particle.style.background = particleColors[Math.floor(Math.random() * particleColors.length)];
+        particle.style.cssText = `
+            width:${size}px;height:${size}px;position:fixed;top:${y}px;left:${x}px;
+            border-radius:50%;pointer-events:none;z-index:9999;
+            background:${particleColors[Math.floor(Math.random() * particleColors.length)]};
+        `;
+        document.body.appendChild(particle);
+        particlesRef.current.push(particle);
 
-        const destinationX = x + (Math.random() - 0.5) * 2 * 75;
-        const destinationY = y + (Math.random() - 0.5) * 2 * 75;
-
-        const animation = particle.animate([
-            {
-                transform: `translate(-50%, -50%)`,
-                opacity: 1
-            },
-            {
-                transform: `translate(${destinationX - x - size / 2}px, ${destinationY - y - size / 2}px)`,
-                opacity: 0
-            }
-        ], {
-            duration: 500 + Math.random() * 1000,
-            easing: 'cubic-bezier(0, .9, .57, 1)',
-            delay: 0
-        });
-
-        animation.onfinish = () => {
+        const destX = x + (Math.random() - 0.5) * 2 * 75;
+        const destY = y + (Math.random() - 0.5) * 2 * 75;
+        const anim = particle.animate([
+            { transform: 'translate(-50%,-50%)', opacity: 1 },
+            { transform: `translate(${destX - x - size / 2}px,${destY - y - size / 2}px)`, opacity: 0 }
+        ], { duration: 500 + Math.random() * 1000, easing: 'cubic-bezier(0,.9,.57,1)' });
+        anim.onfinish = () => {
             particle.remove();
+            particlesRef.current = particlesRef.current.filter(p => p !== particle);
         };
     }, []);
 
     useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            createParticle(e.clientX, e.clientY);
-        };
-
-        window.addEventListener('mousemove', handleMouseMove);
-
+        const handler = (e: MouseEvent) => createParticle(e.clientX, e.clientY);
+        window.addEventListener('mousemove', handler);
         return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mousemove', handler);
+            // 卸载时清理所有未完成动画的粒子
+            particlesRef.current.forEach(p => p.remove());
+            particlesRef.current = [];
         };
     }, [createParticle]);
 
-    return null; // This component does not render anything itself
+    return null;
 };
 
 export default ParticleEffect;

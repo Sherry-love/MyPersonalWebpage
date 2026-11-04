@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>页面走丢了 · 刘东徽的网站</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --base: #faf7f4;
+            --ink: #4a4458;
+            --muted: #8a8498;
+            --purple: #c4b5d5;
+            --pink: #d4b8c0;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(60vw 60vw at 80% 0%, rgba(232, 226, 240, 0.7), transparent 60%),
+                radial-gradient(50vw 50vw at 10% 90%, rgba(225, 236, 236, 0.6), transparent 60%),
+                var(--base);
+            color: var(--ink);
+            font-family: 'Noto Serif SC', 'Songti SC', STSong, SimSun, serif;
+            padding: 24px;
+        }
+        .card {
+            max-width: 460px;
+            width: 100%;
+            text-align: center;
+            padding: 48px 32px;
+            border: 1px solid rgba(200, 192, 210, 0.5);
+            border-radius: 16px;
+            background: rgba(255, 253, 250, 0.55);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(196, 181, 213, 0.12);
+        }
+        .code {
+            font-size: 56px;
+            letter-spacing: 0.08em;
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 12px;
+        }
+        p { color: var(--muted); line-height: 1.9; margin: 0 0 24px; font-weight: 300; }
+        a {
+            display: inline-block;
+            padding: 10px 26px;
+            border-radius: 999px;
+            color: #fff;
+            text-decoration: none;
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        // SPA 回退：把 /MyPersonalWebpage/a1 转成 /MyPersonalWebpage/?/a1，
+        // 由 index.html 里的脚本还原路径后交给 BrowserRouter。
+        (function () {
+            var pathSegmentsToKeep = 1;
+            var location = window.location;
+            location.replace(
+                location.protocol + '//' + location.hostname +
+                (location.port ? ':' + location.port : '') +
+                location.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') +
+                '/?/' +
+                location.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/')
+                    .replace(/&/g, '~and~') +
+                (location.search ? '&' + location.search.slice(1).replace(/&/g, '~and~') : '') +
+                location.hash
+            );
+        })();
+    </script>
+</head>
+<body>
+    <div class="card">
+        <p class="code">404</p>
+        <p>这条小径没有通向任何地方，正在带你回到花园入口…</p>
+        <a href="/MyPersonalWebpage/">回到首页</a>
+    </div>
+</body>
+</html>
