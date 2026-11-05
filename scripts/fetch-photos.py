@@ -7,8 +7,8 @@
   - 全部下载到本地，运行时不依赖外链。
 
 输出：
-  public/photos/<slug>.webp        长边 1800，详情页用
-  public/photos/<slug>-thumb.webp  长边 640，网格用
+  public/gallery/<slug>.webp        长边 1800，详情页用
+  public/gallery/<slug>-thumb.webp  长边 640，网格用
   src/data/photos.json             标题、作者、许可、来源、尺寸
 
 用法：
@@ -30,7 +30,7 @@ import urllib.request
 from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-OUT_DIR = ROOT / "public" / "photos"
+OUT_DIR = ROOT / "public" / "gallery"
 DATA_FILE = ROOT / "src" / "data" / "photos.json"
 UA = {"User-Agent": "impressionist-garden/1.0 (personal portfolio; contact: site owner)"}
 
@@ -174,8 +174,8 @@ def main() -> None:
             "title": name,
             "subtitle": subtitle,
             "alt": alt,
-            "src": f"photos/{slug}.webp",
-            "thumb": f"photos/{slug}-thumb.webp",
+            "src": f"gallery/{slug}.webp",
+            "thumb": f"gallery/{slug}-thumb.webp",
             "width": image.width,
             "height": image.height,
             "credit": credit,
@@ -220,8 +220,8 @@ def add_local_photos(result: list[dict]) -> None:
             "title": path.stem,
             "subtitle": "我的照片",
             "alt": path.stem,
-            "src": f"photos/{slug}.webp",
-            "thumb": f"photos/{slug}-thumb.webp",
+            "src": f"gallery/{slug}.webp",
+            "thumb": f"gallery/{slug}-thumb.webp",
             "width": image.width,
             "height": image.height,
             "credit": "自己的照片",

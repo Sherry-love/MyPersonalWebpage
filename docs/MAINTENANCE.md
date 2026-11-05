@@ -94,7 +94,8 @@ python scripts/build-images.py
 
 ## 相册
 
-相册页是 `/photos`，数据在 `src/data/photos.json`，图片在 `public/photos/`。
+相册页是 `/photos`，数据在 `src/data/photos.json`，图片在 `public/gallery/`
+（不要命名为 `public/photos/`，否则会和 `/photos` 路由冲突，被 Pages 301 成目录）。
 
 **现在的内容从哪来**
 

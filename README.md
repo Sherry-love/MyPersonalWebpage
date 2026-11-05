@@ -84,7 +84,7 @@
 ## 项目文件注释
 
 - 根目录：`index.html`、`vite.config.ts`、`README.md`
-- `public/`：favicon、分享图、`images/`、`photos/`、GitHub Pages 的 `404.html`
+- `public/`：favicon、分享图、`images/`、`gallery/`、GitHub Pages 的 `404.html`
 - `src/`
   - `components/`：所有 UI 组件
   - `pages/`：六个页面
