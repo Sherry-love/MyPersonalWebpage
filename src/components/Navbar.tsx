@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
         { path: '/a1', label: '学术', icon: 'fa-graduation-cap' },
         { path: '/a2', label: '项目', icon: 'fa-code' },
         { path: '/a3', label: '小练笔', icon: 'fa-feather-alt' },
-        { path: '/photos', label: '照片', icon: 'fa-image' },
+        { path: '/photos', label: '相册', icon: 'fa-image' },
         { path: '/a4', label: '简介', icon: 'fa-info-circle' },
     ];
 

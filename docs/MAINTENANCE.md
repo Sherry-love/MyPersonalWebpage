@@ -92,6 +92,37 @@ python scripts/build-images.py
 
 换头像时替换 `design/` 里的原图，必要时调整脚本顶部的 `FACE_BOX` 裁切框。
 
+## 相册
+
+相册页是 `/photos`，数据在 `src/data/photos.json`，图片在 `public/photos/`。
+
+**现在的内容从哪来**
+
+- 「青岛」8 张：Wikimedia Commons 上 CC BY / CC BY-SA 授权的照片；
+- 「画」6 张：莫奈作品，已进入公有领域；
+- 每张图的作者、许可、来源都写在 JSON 里，页面上（大图的底部）会显示。
+
+**换成自己的照片**
+
+1. 把照片丢进 `design/photos/`（支持 jpg / png / webp，文件名会作为标题）；
+2. 运行：
+
+   ```bash
+   npm run assets:photos
+   ```
+
+3. 脚本会生成 WebP、写入 `photos.json`，相册自动多出「我的」这一栏。
+
+想改标题、副标题、alt，直接编辑 `src/data/photos.json` 里对应条目
+（脚本重新跑会覆盖「我的」条目的标题，所以更稳的做法是改文件名）。
+替换 Commons 素材则改 `scripts/fetch-photos.py` 顶部的 `ITEMS` 列表，删掉旧 slug 的图片再跑。
+
+**授权注意**
+
+- 只收公有领域、CC0、CC BY、CC BY-SA 的图；脚本里有白名单，其他许可会跳过；
+- CC BY / CC BY-SA 必须保留作者和许可，页面已经做了；不要把自己的照片标成别人的作品；
+- 他人的照片（尤其是人像）要拿到本人同意再放。
+
 ## 此刻的青岛（时间与天气）
 
 首页那颗「此刻 · 青岛 · 雨 15°C」的小胶囊不是装饰，它同时驱动整站的光线与天气层：
@@ -133,6 +164,7 @@ python scripts/build-images.py
 | 爱好（拍立得） | `src/components/Hobbies.tsx` 的 `hobbies`（图标用 Font Awesome 类名） |
 | 奖项（奖状墙） | `src/components/Achievements.tsx` 的 `achievementsData` |
 | 天气城市 | `src/ambient/AmbientContext.tsx` 的 `CITY` 与 `WEATHER_URL` |
+| 相册 | 自己的照片放 `design/photos/` 后跑 `npm run assets:photos`；Commons 素材改 `scripts/fetch-photos.py` 的 `ITEMS` |
 
 ## 已知限制
 
@@ -142,3 +174,4 @@ python scripts/build-images.py
 - `public/404.html` 的深链接回退依赖项目站点子路径（`pathSegmentsToKeep = 1`）。
 - 移动端（< 768px）的时间轴是竖直列表，不是圆环。
 - 油画滤镜生效的 5 秒内，`position: fixed` 的元素会被滤镜容器接管，导航栏在滚动状态下会暂时离开视口；这是效果的副作用，不想接受就把 `html.oil-paint #root` 的 `filter` 去掉。
+- 相册的 14 张原图约 6.5MB（网格只加载 640px 缩略图，大图在点开时才加载）；自己的照片多起来后，可以考虑把 `fetch-photos.py` 里的 1800 改成 1400 再压一轮。

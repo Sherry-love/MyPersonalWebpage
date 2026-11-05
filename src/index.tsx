@@ -22,6 +22,7 @@ import './styles/ambient.css';
 import './styles/shelf.css';
 import './styles/objects.css';
 import './styles/eggs.css';
+import './styles/photos.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

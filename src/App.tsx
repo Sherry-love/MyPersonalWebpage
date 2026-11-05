@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './components/ThemeContext';
 import Home from './pages/Home';
-import PagePlaceholder from './pages/PagePlaceholder';
 import PageA4 from './pages/PageA4';
 import EssayPage from './pages/EssayPage';
 import ProjectShowcase from './pages/ProjectShowcase';
 import ResearchPage from './pages/ResearchPage';
 import NotFound from './pages/NotFound';
+import PhotosPage from './pages/PhotosPage';
 import AmbientMood from './components/AmbientMood';
 import { AmbientProvider } from './ambient/AmbientContext';
 import Snail from './components/Snail';
@@ -68,7 +68,7 @@ const AppContent: FC = () => {
                         <Route path="/a1" element={<ResearchPage />} />
                         <Route path="/a2" element={<ProjectShowcase />} />
                         <Route path="/a3" element={<EssayPage />} />
-                        <Route path="/photos" element={<PagePlaceholder />} />
+                        <Route path="/photos" element={<PhotosPage />} />
                         <Route path="/a4" element={<PageA4 />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
