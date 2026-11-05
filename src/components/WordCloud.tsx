@@ -12,11 +12,16 @@ const CATEGORY_KEY: Record<WordCategory, string> = {
     站点: 'site',
 };
 
+interface WordCloudProps {
+    /** 作为侧边小组件：标题压缩、球更小、词更密 */
+    compact?: boolean;
+}
+
 /**
  * 3D 词云：词分布在球面上，按 Y/X 旋转后用透视投影落到 2D。
  * 没有引 three.js —— 标签保持 DOM，清晰、可点击、可拖拽。
  */
-const WordCloud: React.FC = () => {
+const WordCloud: React.FC<WordCloudProps> = ({ compact = false }) => {
     const navigate = useNavigate();
     const stageRef = useRef<HTMLDivElement>(null);
     const chipRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -86,11 +91,15 @@ const WordCloud: React.FC = () => {
 
         const measure = () => {
             const rect = stage.getBoundingClientRect();
-            const narrow = rect.width < 640;
-            radius = Math.min(rect.width, rect.height) * 0.44;
+            // 用视口宽度判断移动端，避免把侧边窄栏误判成手机
+            const narrow = window.innerWidth < 640;
+            radius = Math.min(rect.width, rect.height) * (compact ? 0.46 : 0.44);
+            const base = compact ? 8.8 : 10;
+            const factor = compact ? 0.42 : 0.55;
+            const fontScale = compact ? (narrow ? 0.9 : 1) : (narrow ? 0.8 : 1);
             cloudWords.forEach((word, i) => {
                 const el = chipRefs.current[i];
-                if (el) el.style.fontSize = `${(10 + word.weight * 0.55) * (narrow ? 0.8 : 1)}px`;
+                if (el) el.style.fontSize = `${(base + word.weight * factor) * fontScale}px`;
             });
             render();
         };
@@ -122,7 +131,7 @@ const WordCloud: React.FC = () => {
             cancelAnimationFrame(raf);
             window.removeEventListener('resize', measure);
         };
-    }, [points]);
+    }, [points, compact]);
 
     const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
         dragRef.current = { active: true, lastX: event.clientX, lastY: event.clientY, moved: 0 };
@@ -152,21 +161,22 @@ const WordCloud: React.FC = () => {
     };
 
     return (
-        <section className="word-cloud-section">
+        <section className={`word-cloud-section${compact ? ' word-cloud--compact' : ''}`}>
             <header className="word-cloud-head">
                 <div>
                     <p className="word-cloud-kicker">WORD CLOUD</p>
                     <h2 className="word-cloud-title">词云</h2>
-                    <p className="word-cloud-sub">我最近反复想到的词。拖一下会转，点一个看看。</p>
+                    {!compact && <p className="word-cloud-sub">我最近反复想到的词。拖一下会转，点一个看看。</p>}
                 </div>
                 <button
                     type="button"
                     className="word-cloud-pause"
                     onClick={() => setPaused((value) => !value)}
                     aria-pressed={paused}
+                    aria-label={paused ? '继续旋转' : '暂停旋转'}
                 >
                     <i className={`fas ${paused ? 'fa-play' : 'fa-pause'}`} aria-hidden="true" />
-                    {paused ? '继续' : '暂停'}
+                    <span className="word-cloud-pause-label">{paused ? '继续' : '暂停'}</span>
                 </button>
             </header>
 
@@ -188,7 +198,7 @@ const WordCloud: React.FC = () => {
                         type="button"
                         ref={(el) => { chipRefs.current[index] = el; }}
                         className={`word-chip word-chip--${CATEGORY_KEY[word.category]}`}
-                        style={{ fontSize: `${10 + word.weight * 0.55}px` }}
+                        style={{ fontSize: `${8.8 + word.weight * 0.42}px` }}
                         onMouseEnter={() => { setActive(word); }}
                         onFocus={() => { setActive(word); }}
                         onClick={() => selectWord(word)}

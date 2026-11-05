@@ -6,6 +6,31 @@
     position: relative;
 }
 
+/* 调色盘 + 词云：主栏 + 侧边小组件 */
+.home-duo {
+    display: grid;
+    grid-template-columns: minmax(0, 1.75fr) minmax(300px, 0.9fr);
+    gap: 20px;
+    align-items: stretch;
+}
+
+.home-duo > * {
+    min-width: 0;
+}
+
+.home-duo .palette-board {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media (max-width: 900px) {
+    .home-duo {
+        grid-template-columns: 1fr;
+    }
+}
+
 .word-cloud-head {
     display: flex;
     align-items: flex-end;
@@ -160,6 +185,69 @@
     font-size: 10px;
     color: var(--text-secondary);
     opacity: 0.7;
+}
+
+/* 侧边小组件形态 */
+.word-cloud--compact .word-cloud-head {
+    max-width: none;
+    margin: 0 0 8px;
+    padding: 0 2px;
+    align-items: center;
+}
+
+.word-cloud--compact .word-cloud-kicker {
+    font-size: 9px;
+    letter-spacing: 0.26em;
+}
+
+.word-cloud--compact .word-cloud-title {
+    font-size: 1.15rem;
+    margin-top: 2px;
+}
+
+.word-cloud--compact .word-cloud-sub {
+    display: none;
+}
+
+.word-cloud--compact .word-cloud {
+    max-width: none;
+    height: 340px;
+    border-radius: 18px;
+}
+
+.word-cloud--compact .word-cloud::before {
+    inset: 10% 12%;
+}
+
+.word-cloud--compact .word-cloud::after {
+    inset: 24% 28%;
+}
+
+.word-cloud--compact .word-chip {
+    padding: 2px 7px;
+}
+
+.word-cloud--compact .word-cloud-pause {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.word-cloud--compact .word-cloud-pause-label {
+    display: none;
+}
+
+.word-cloud--compact .word-cloud-status {
+    max-width: none;
+    margin-top: 6px;
+    padding: 0 2px;
+    font-size: 10px;
+}
+
+.word-cloud--compact .word-cloud-status span:last-child {
+    display: none;
 }
 
 /* 暗色 */

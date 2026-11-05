@@ -24,8 +24,12 @@ const Home: React.FC = () => {
                     <RevealOnScroll delay={0}><Header /></RevealOnScroll>
                     <RevealOnScroll delay={60}><About /></RevealOnScroll>
                     <RevealOnScroll delay={120}><GitHubGarden /></RevealOnScroll>
-                    <RevealOnScroll delay={180}><Skills /></RevealOnScroll>
-                    <RevealOnScroll delay={210}><WordCloud /></RevealOnScroll>
+                    <RevealOnScroll delay={180}>
+                        <div className="home-duo">
+                            <Skills />
+                            <WordCloud compact />
+                        </div>
+                    </RevealOnScroll>
                     <RevealOnScroll delay={240}><Platforms /></RevealOnScroll>
                     <RevealOnScroll delay={300}><Hobbies /></RevealOnScroll>
                     <RevealOnScroll delay={360}><Achievements /></RevealOnScroll>

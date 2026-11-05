@@ -126,7 +126,7 @@ python scripts/build-images.py
 
 ## 词云
 
-首页「词云」是一个 3D 标签球：`src/components/WordCloud.tsx` 用 Fibonacci 球面分布
+技术栈右侧的「词云」小组件是一个 3D 标签球：`src/components/WordCloud.tsx` 用 Fibonacci 球面分布
 + CSS 3D 投影实现，没有引入 three.js。
 
 - 词表在 `src/data/words.ts`：`text`、`weight`（3–10，决定字号）、`category`、
@@ -136,6 +136,9 @@ python scripts/build-images.py
 - 交互：自动旋转；鼠标悬停暂停并把词提到最前；拖拽改变角度（松手后有惯性）；
   右上角可暂停；`prefers-reduced-motion` 下保持静止。
 - 加词不需要动组件，只改 `words.ts`；词太多会互相遮挡，30–40 个比较合适。
+- 布局：`Home.tsx` 里 `.home-duo` 是「调色盘 + 词云」的两栏网格
+  （`1.75fr / 0.9fr`），900px 以下自动纵向堆叠；`<WordCloud compact />`
+  会隐藏副标题、把球缩到 340px，适合当侧边小组件。
 
 ## 此刻的青岛（时间与天气）
 首页那颗「此刻 · 青岛 · 雨 15°C」的小胶囊不是装饰，它同时驱动整站的光线与天气层：
