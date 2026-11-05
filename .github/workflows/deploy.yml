@@ -36,6 +36,9 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          # 仓库还没开 Pages 时，用工作流令牌自动开启（仓库需具备 Pages 资格）
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
