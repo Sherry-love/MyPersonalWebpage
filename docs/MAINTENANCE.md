@@ -124,8 +124,20 @@ python scripts/build-images.py
 - CC BY / CC BY-SA 必须保留作者和许可，页面已经做了；不要把自己的照片标成别人的作品；
 - 他人的照片（尤其是人像）要拿到本人同意再放。
 
-## 此刻的青岛（时间与天气）
+## 词云
 
+首页「词云」是一个 3D 标签球：`src/components/WordCloud.tsx` 用 Fibonacci 球面分布
++ CSS 3D 投影实现，没有引入 three.js。
+
+- 词表在 `src/data/words.ts`：`text`、`weight`（3–10，决定字号）、`category`、
+  `href`（可选，点击跳转）。
+- 分类决定颜色：`技术 / 生活 / 写作 / 城市 / 站点`，对应样式在 `src/styles/words.css`
+  的 `.word-chip--tech` 等。
+- 交互：自动旋转；鼠标悬停暂停并把词提到最前；拖拽改变角度（松手后有惯性）；
+  右上角可暂停；`prefers-reduced-motion` 下保持静止。
+- 加词不需要动组件，只改 `words.ts`；词太多会互相遮挡，30–40 个比较合适。
+
+## 此刻的青岛（时间与天气）
 首页那颗「此刻 · 青岛 · 雨 15°C」的小胶囊不是装饰，它同时驱动整站的光线与天气层：
 
 - **时间相位**：按访问者本地时间分成 `dawn / morning / day / dusk / night`，
@@ -166,6 +178,7 @@ python scripts/build-images.py
 | 奖项（奖状墙） | `src/components/Achievements.tsx` 的 `achievementsData` |
 | 天气城市 | `src/ambient/AmbientContext.tsx` 的 `CITY` 与 `WEATHER_URL` |
 | 相册 | 自己的照片放 `design/photos/` 后跑 `npm run assets:photos`；Commons 素材改 `scripts/fetch-photos.py` 的 `ITEMS` |
+| 词云 | `src/data/words.ts` 的 `cloudWords`（权重、分类、可选 `href`） |
 
 ## 已知限制
 

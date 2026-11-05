@@ -1,7 +1,7 @@
 {
   "username": "Sherry-love",
   "updatedAt": "2026-11-05",
-  "total": 0,
+  "total": 23,
   "days": [
     {
       "date": "2025-11-02",
@@ -345,13 +345,13 @@
     },
     {
       "date": "2026-01-09",
-      "count": 0,
-      "level": 0
+      "count": 2,
+      "level": 2
     },
     {
       "date": "2026-01-10",
-      "count": 0,
-      "level": 0
+      "count": 2,
+      "level": 2
     },
     {
       "date": "2026-01-11",
@@ -370,8 +370,8 @@
     },
     {
       "date": "2026-01-14",
-      "count": 0,
-      "level": 0
+      "count": 1,
+      "level": 1
     },
     {
       "date": "2026-01-15",
@@ -395,18 +395,18 @@
     },
     {
       "date": "2026-01-19",
-      "count": 0,
-      "level": 0
+      "count": 5,
+      "level": 4
     },
     {
       "date": "2026-01-20",
-      "count": 0,
-      "level": 0
+      "count": 5,
+      "level": 4
     },
     {
       "date": "2026-01-21",
-      "count": 0,
-      "level": 0
+      "count": 1,
+      "level": 1
     },
     {
       "date": "2026-01-22",
@@ -1840,13 +1840,13 @@
     },
     {
       "date": "2026-11-04",
-      "count": 0,
-      "level": 0
+      "count": 1,
+      "level": 1
     },
     {
       "date": "2026-11-05",
-      "count": 0,
-      "level": 0
+      "count": 6,
+      "level": 4
     }
   ]
 }

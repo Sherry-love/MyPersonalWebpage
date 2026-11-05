@@ -61,6 +61,10 @@ export const timeline: TimelineEntry[] = [
         date: '2026年11月5日',
         content: '相册上线：青岛与莫奈两个抽屉，14 张可看大图的作品，支持自己投递照片。',
     },
+    {
+        date: '2026年11月5日',
+        content: '首页新增 3D 词云：36 个词在球面上缓慢旋转，可拖拽、可暂停，点词直达对应页面。',
+    },
 ];
 
 export const lastUpdated = timeline[timeline.length - 1]?.date ?? '';

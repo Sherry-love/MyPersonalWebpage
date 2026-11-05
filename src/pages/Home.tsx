@@ -9,6 +9,7 @@ import Footer from '../components/Footer';
 import Hobbies from '../components/Hobbies';
 import Achievements from '../components/Achievements';
 import GitHubGarden from '../components/GitHubGarden';
+import WordCloud from '../components/WordCloud';
 import RevealOnScroll from '../components/RevealOnScroll';
 import BackToTop from '../components/BackToTop';
 import PetalFall from '../components/PetalFall';
@@ -24,6 +25,7 @@ const Home: React.FC = () => {
                     <RevealOnScroll delay={60}><About /></RevealOnScroll>
                     <RevealOnScroll delay={120}><GitHubGarden /></RevealOnScroll>
                     <RevealOnScroll delay={180}><Skills /></RevealOnScroll>
+                    <RevealOnScroll delay={210}><WordCloud /></RevealOnScroll>
                     <RevealOnScroll delay={240}><Platforms /></RevealOnScroll>
                     <RevealOnScroll delay={300}><Hobbies /></RevealOnScroll>
                     <RevealOnScroll delay={360}><Achievements /></RevealOnScroll>
