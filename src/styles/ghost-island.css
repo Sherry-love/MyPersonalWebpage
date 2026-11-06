@@ -1,0 +1,50 @@
+﻿/* =============================================
+   é¡µè„šå°è£…é¥°ï¼šç´«è‰²å°å²› + å°å¹½çµ
+   ============================================= */
+
+.ghost-island {
+    position: absolute;
+    right: clamp(12px, 3vw, 56px);
+    bottom: 10px;
+    width: clamp(145px, 12vw, 175px);
+    pointer-events: none;
+    opacity: 0.96;
+    z-index: 0;
+    transform-origin: 50% 80%;
+    filter: drop-shadow(0 18px 26px rgba(90, 75, 110, 0.22));
+    animation: ghost-float 7s ease-in-out infinite;
+}
+
+.ghost-island img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+@keyframes ghost-float {
+    0%,
+    100% {
+        transform: translateY(0) rotate(-0.8deg);
+    }
+    50% {
+        transform: translateY(-9px) rotate(0.8deg);
+    }
+}
+
+html.dark .ghost-island {
+    opacity: 0.9;
+    filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.45));
+}
+
+@media (max-width: 900px) {
+    .ghost-island {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ghost-island {
+        animation: none;
+    }
+}
+

@@ -25,6 +25,7 @@ import './styles/eggs.css';
 import './styles/photos.css';
 import './styles/words.css';
 import './styles/hero-tree.css';
+import './styles/ghost-island.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

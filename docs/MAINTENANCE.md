@@ -174,6 +174,34 @@ python scripts/blender/postprocess_tree_tutorial.py
 `.blend`、参考视频和渲染帧都在 `.gitignore` 里，仓库只提交渲染后的视频和 poster。
 如果之后要商用或公开再分发，请先联系原作者确认授权。
 
+## 小幽灵岛（页脚贴纸）
+
+页脚右侧的小岛是一张 **透明 WebP 贴纸**，不是视频，也不加载 3D：
+
+- 场景：`design/blender/ghost-world.blend`（本地，未入库）
+- 来源：`超治愈LowPoly皮卡丘世界` 的 Blender 工程
+- 改造：隐藏皮卡丘整组（`Cube.043` 及子物体）；在原位置放一个低多边形淡紫小幽灵；
+  渲染透明背景后，用脚本把绿色/青色/黄色统一调到紫/粉，再裁切留白导出 WebP
+- 产物：`public/images/ghost-island.webp`（约 29KB，525×474）
+- 组件：`src/components/GhostIsland.tsx` + `src/styles/ghost-island.css`
+- 位置：`Footer.tsx` 右侧，`width: clamp(145px, 12vw, 175px)`；900px 以下隐藏；
+  `prefers-reduced-motion` 下停止浮动
+
+重新生成：
+
+```bash
+# 1. 打开原工程、隐藏皮卡丘、加幽灵，渲染透明帧（800×450）
+& "$env:LOCALAPPDATA\Programs\Blender\blender-5.2.3-windows-x64\blender.exe" -b --factory-startup --python scripts/blender/build_ghost_world.py
+& "$env:LOCALAPPDATA\Programs\Blender\blender-5.2.3-windows-x64\blender.exe" -b design/blender/ghost-world.blend -f 1
+
+# 2. 紫色调 + 裁切 + 透明 WebP
+python scripts/blender/postprocess_ghost.py
+```
+
+**授权说明**：原始小岛工程来自第三方课程/工程文件，仅用于本站个人展示；
+工程文件、原贴图和渲染中间帧都在 `.gitignore` 里，仓库只提交改造后的贴纸。
+皮卡丘已完全移除，不涉及该 IP 的再分发。
+
 ## 此刻的青岛（时间与天气）
 首页那颗「此刻 · 青岛 · 雨 15°C」的小胶囊不是装饰，它同时驱动整站的光线与天气层：
 
@@ -217,6 +245,7 @@ python scripts/blender/postprocess_tree_tutorial.py
 | 相册 | 自己的照片放 `design/photos/` 后跑 `npm run assets:photos`；Commons 素材改 `scripts/fetch-photos.py` 的 `ITEMS` |
 | 词云 | `src/data/words.ts` 的 `cloudWords`（权重、分类、可选 `href`） |
 | 四季树 | 改 `design/blender/four-seasons-tutorial.blend` 的相机/曝光后重新渲染，场景来源见「四季树」一节 |
+| 页脚小幽灵 | `public/images/ghost-island.webp`；改场景跑 `scripts/blender/build_ghost_world.py` + `postprocess_ghost.py` |
 
 ## 已知限制
 
