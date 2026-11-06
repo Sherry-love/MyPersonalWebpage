@@ -142,34 +142,37 @@ python scripts/build-images.py
 
 ## 四季树（Blender 渲染）
 
-首页标题上方的小树不是实时 3D，而是一段 **Blender 离线渲染的 6 秒无缝循环**
-（144 帧 / 24fps，480×480），网页端只是一个 `<video>`。
+首页标题上方的小树不是实时 3D，而是一段 **Blender 离线渲染的 12 秒四季循环**
+（288 帧 / 24fps，480×480），网页端只是一个 `<video>`。
 
-- 场景：`design/blender/four-seasons.blend`；生成脚本 `scripts/blender/build_four_seasons.py`
-- 结构：低多边形小岛 + 四色树冠（春粉 / 夏绿 / 秋橙 / 冬蓝）+ 转台 360° 线性旋转
-- 渲染：Cycles + OptiX，32 采样 + OpenImageDenoise，透明背景
+场景来自 B 站 **@再来一瓶辣椒酱** 的教程《【每日一练】把春夏秋冬种在一棵树上【四季树】》
+（[BV1LpJ26kEL2](https://www.bilibili.com/video/BV1LpJ26kEL2/)）的工程文件。
+树冠、季节联动、浮土、苔斑、河石、黄铜环、四季宝石和粒子都是原场景的几何节点；
+我只调了相机（正交 scale 10.8）、曝光 +0.3、方形画幅和渲染参数。
+
+- 工程：`design/blender/four-seasons-tutorial.blend`（本地，未入库）
+- 原始文件：`design/blender/tutorial-source.blend`（本地，未入库）
+- 渲染：Blender 5.2.3 + Eevee，48 采样，480×480，288 帧
 
 重新渲染：
 
 ```bash
-# 1. 生成场景（会覆盖 four-seasons.blend）
-& "$env:LOCALAPPDATA\Programs\Blender\blender-4.5.9-windows-x64\blender.exe" -b --factory-startup --python scripts/blender/build_four_seasons.py
+# 1. 渲染 288 帧，约 3–5 分钟（Eevee，RTX 4060）
+& "$env:LOCALAPPDATA\Programs\Blender\blender-5.2.3-windows-x64\blender.exe" -b design/blender/four-seasons-tutorial.blend -a
 
-# 2. 渲染 144 帧，约 8–10 分钟
-& "$env:LOCALAPPDATA\Programs\Blender\blender-4.5.9-windows-x64\blender.exe" -b design/blender/four-seasons.blend -a
-
-# 3. 合成奶油底、编码 MP4/WebM、生成 poster
-python scripts/blender/postprocess_tree.py
+# 2. 编码 MP4/WebM + poster
+python scripts/blender/postprocess_tree_tutorial.py
 ```
 
 产物：
 
-- `public/video/four-seasons.mp4`、`.webm`
+- `public/video/four-seasons.mp4`（H.264，全浏览器兼容）
 - `public/images/four-seasons-poster.webp`
 - 组件：`src/components/HeroTree.tsx`，`prefers-reduced-motion` 或视频加载失败时回退到 poster
 
-渲染帧和合成中间文件在 `design/blender/frames/`、`design/blender/comp/`，已 gitignore；
-只有 `.blend`、脚本和最终视频会进仓库。
+**授权说明**：工程文件来自教程作者，仅用于本站个人展示，不随仓库分发；
+`.blend`、参考视频和渲染帧都在 `.gitignore` 里，仓库只提交渲染后的视频和 poster。
+如果之后要商用或公开再分发，请先联系原作者确认授权。
 
 ## 此刻的青岛（时间与天气）
 首页那颗「此刻 · 青岛 · 雨 15°C」的小胶囊不是装饰，它同时驱动整站的光线与天气层：
@@ -213,7 +216,7 @@ python scripts/blender/postprocess_tree.py
 | 天气城市 | `src/ambient/AmbientContext.tsx` 的 `CITY` 与 `WEATHER_URL` |
 | 相册 | 自己的照片放 `design/photos/` 后跑 `npm run assets:photos`；Commons 素材改 `scripts/fetch-photos.py` 的 `ITEMS` |
 | 词云 | `src/data/words.ts` 的 `cloudWords`（权重、分类、可选 `href`） |
-| 四季树 | 改 `scripts/blender/build_four_seasons.py` 后重新渲染，见「四季树」一节 |
+| 四季树 | 改 `design/blender/four-seasons-tutorial.blend` 的相机/曝光后重新渲染，场景来源见「四季树」一节 |
 
 ## 已知限制
 

@@ -120,3 +120,9 @@ __pycache__/
 # Blender render intermediates
 design/blender/frames/
 design/blender/comp/
+design/blender/ref/
+design/blender/frames_v2/
+design/blender/tutorial-source.blend
+design/blender/tutorial_frames/
+design/blender/tutorial_samples/
+design/blender/four-seasons-tutorial.blend

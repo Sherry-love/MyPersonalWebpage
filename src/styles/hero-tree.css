@@ -40,7 +40,7 @@
     position: absolute;
     inset: 7px;
     border-radius: 50%;
-    border: 1px solid rgba(196, 181, 213, 0.4);
+    border: 1px solid rgba(217, 179, 108, 0.38);
     pointer-events: none;
 }
 
@@ -48,11 +48,6 @@ html.dark .hero-tree {
     box-shadow:
         0 22px 42px -24px rgba(0, 0, 0, 0.7),
         0 0 0 7px rgba(27, 28, 36, 0.5);
-}
-
-html.dark .hero-tree video,
-html.dark .hero-tree img {
-    filter: brightness(0.82) saturate(0.92) contrast(0.98);
 }
 
 @media (max-width: 640px) {

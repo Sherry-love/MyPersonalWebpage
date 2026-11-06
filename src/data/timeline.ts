@@ -67,7 +67,7 @@ export const timeline: TimelineEntry[] = [
     },
     {
         date: '2026年11月6日',
-        content: '四季树上线：Blender 离线渲染 6 秒循环，放在首页标题上方，首屏不跑实时 3D。',
+        content: '四季树上线：基于 Blender 教程工程渲染 12 秒四季循环，放在首页标题上方，首屏不跑实时 3D。',
     },
 ];
 
