@@ -71,7 +71,7 @@ export const timeline: TimelineEntry[] = [
     },
     {
         date: '2026年11月6日',
-        content: '小幽灵岛上线条：LowPoly 小岛改成紫色调，移除皮卡丘换成淡紫小幽灵，放在代码花园右侧做 4 秒游走动画。',
+        content: '小幽灵岛上线条：LowPoly 小岛改成紫色调，移除皮卡丘换成淡紫小幽灵，放在代码花园右侧做 3 秒游走动画。',
     },
 ];
 

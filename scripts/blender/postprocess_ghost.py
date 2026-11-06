@@ -39,10 +39,13 @@ def grade(image: Image.Image) -> Image.Image:
 
 def main() -> None:
     files = sorted(FRAMES.glob("frame_*.png"))
-    if len(files) < 48:
-        raise SystemExit(f"只有 {len(files)} 帧，至少要 48 帧")
+    if len(files) < 36:
+        raise SystemExit(f"只有 {len(files)} 帧，至少要 36 帧")
 
-    graded = [grade(Image.open(path).convert("RGBA")) for path in files[:48]]
+    # 从 48 帧里均匀取 36 帧，压到 3 秒循环，减小动画体积
+    picks = [files[round(i * (len(files) - 1) / 35)] for i in range(36)]
+    picks = list(dict.fromkeys(picks))
+    graded = [grade(Image.open(path).convert("RGBA")) for path in picks]
 
     # 所有帧取并集，保证游走时裁切框不抖
     left = min(frame.getchannel("A").getbbox()[0] for frame in graded)
@@ -58,9 +61,9 @@ def main() -> None:
     box = (left, top, right, bottom)
 
     cropped = [frame.crop(box) for frame in graded]
-    if cropped[0].width > 440:
-        ratio = 440 / cropped[0].width
-        size = (440, round(cropped[0].height * ratio))
+    if cropped[0].width > 360:
+        ratio = 360 / cropped[0].width
+        size = (360, round(cropped[0].height * ratio))
         cropped = [frame.resize(size, Image.LANCZOS) for frame in cropped]
 
     STATIC_OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -72,7 +75,7 @@ def main() -> None:
         append_images=cropped[1:],
         duration=83,
         loop=0,
-        quality=78,
+        quality=72,
         method=6,
     )
 

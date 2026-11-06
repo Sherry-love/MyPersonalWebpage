@@ -176,7 +176,7 @@ python scripts/blender/postprocess_tree_tutorial.py
 
 ## 小幽灵岛（代码花园右侧）
 
-代码花园右侧的小岛是 **48 帧 / 12fps / 4 秒的动画 WebP**：幽灵在树前左右游走，
+代码花园右侧的小岛是 **36 帧 / 12fps / 3 秒的动画 WebP**：幽灵在树前左右游走，
 岛屿本身不旋转。它不是视频，也不加载 3D。
 
 - 场景：`design/blender/ghost-world.blend`（本地，未入库）
@@ -184,15 +184,16 @@ python scripts/blender/postprocess_tree_tutorial.py
 - 改造：隐藏皮卡丘整组（`Cube.043` 及子物体）；在原位置放一个低多边形淡紫小幽灵；
   固定相机，让幽灵在 `x = -0.5 ± 0.55` 之间往返，叠加轻微上下浮动和摇摆
 - 产物：
-  - `public/images/ghost-island.webp`：静态首帧（22KB，435×360）
-  - `public/images/ghost-island-anim.webp`：48 帧动画（597KB，435×360）
+  - `public/images/ghost-island.webp`：静态首帧（22KB，360×298）
+  - `public/images/ghost-island-anim.webp`：36 帧动画（419KB，360×298）
+  - 渲染 48 帧后，后期均匀取 36 帧并缩到 360px，控制加载体积
 - 组件：`src/components/GhostIsland.tsx` + `src/styles/ghost-island.css`
 - 位置：`Home.tsx` 的 `.garden-duo`，代码花园在左、小岛在右；
   `grid-template-columns: minmax(0,1fr) clamp(190px,20vw,280px)`；
   1100px 以下变成上下堆叠
 - 代码花园的 canvas 原本固定 885px，侧栏出现时用 `max-width:100%` 等比缩小；
   `GitHubGarden` 的鼠标坐标也按缩放比例换算，避免 tooltip 指错格子
-- 静态首帧先显示，611KB 动画加载完再淡入；`prefers-reduced-motion` 或动画失败时只保留静态图
+- 静态首帧先显示，419KB 动画加载完再淡入；`prefers-reduced-motion` 或动画失败时只保留静态图
 
 重新生成：
 
