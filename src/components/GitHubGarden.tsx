@@ -409,8 +409,11 @@ const GitHubGarden: React.FC = () => {
         const canvas = canvasRef.current;
         if (!canvas) { setTooltip(null); return; }
         const rect = canvas.getBoundingClientRect();
-        const mx = e.clientX - rect.left;
-        const my = e.clientY - rect.top;
+        // 画布可能被侧栏压缩，按逻辑尺寸换算回 885×149 坐标系
+        const logicalWidth = WEEKS * (CELL + GAP) + PAD * 2;
+        const logicalHeight = DAYS * (CELL + GAP) + PAD * 2;
+        const mx = (e.clientX - rect.left) * (logicalWidth / rect.width);
+        const my = (e.clientY - rect.top) * (logicalHeight / rect.height);
         const col = Math.floor((mx - PAD) / (CELL + GAP));
         const row = Math.floor((my - PAD) / (CELL + GAP));
         if (col >= 0 && col < WEEKS && row >= 0 && row < DAYS) {

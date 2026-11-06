@@ -1,18 +1,25 @@
-﻿/* =============================================
-   é¡µè„šå°è£…é¥°ï¼šç´«è‰²å°å²› + å°å¹½çµ
+/* =============================================
+   代码花园右侧的小装饰：紫色小岛 + 游走小幽灵
    ============================================= */
 
+.garden-duo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(190px, 20vw, 250px);
+    gap: 20px;
+    align-items: center;
+}
+
+/* 花园画布原本固定 885px；侧栏存在时允许等比缩小，避免横向滚动 */
+.garden-duo canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
 .ghost-island {
-    position: absolute;
-    right: clamp(12px, 3vw, 56px);
-    bottom: 0;
-    width: clamp(170px, 14vw, 200px);
+    position: relative;
+    width: 100%;
     pointer-events: none;
-    opacity: 0.96;
-    z-index: 0;
-    transform-origin: 50% 80%;
     filter: drop-shadow(0 18px 26px rgba(90, 75, 110, 0.22));
-    animation: ghost-float 7s ease-in-out infinite;
 }
 
 .ghost-island img {
@@ -21,31 +28,23 @@
     height: auto;
 }
 
-@keyframes ghost-float {
-    0%,
-    100% {
-        transform: translateY(0) rotate(-0.8deg);
-    }
-    50% {
-        transform: translateY(-9px) rotate(0.8deg);
-    }
-}
-
 html.dark .ghost-island {
-    opacity: 0.9;
     filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.45));
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+    .garden-duo {
+        grid-template-columns: 1fr;
+    }
+
     .ghost-island {
-        display: none;
+        width: min(210px, 55%);
+        margin: 12px auto 0;
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (max-width: 600px) {
     .ghost-island {
-        animation: none;
+        width: 170px;
     }
 }
-
-

@@ -89,23 +89,37 @@ def main():
     add(ico((0.30, -0.46, 0.37), 0.045, blush_mat, scale=(1.0, 0.4, 0.8), subdivisions=2))
     add(ico((-0.30, -0.46, 0.37), 0.045, blush_mat, scale=(1.0, 0.4, 0.8), subdivisions=2))
 
-    # 上下浮动 + 轻微摇摆，250 帧内两个循环
-    for frame, dz, rz in ((1, 0.0, 0.0), (63, 0.07, 0.08), (125, 0.0, 0.0), (188, 0.07, -0.08), (250, 0.0, 0.0)):
-        pivot.location.z = 2.85 + dz
+    # 48 帧 / 12fps / 4 秒：幽灵在岛上来回游走，首尾无缝
+    scene.frame_start = 1
+    scene.frame_end = 48
+    scene.render.fps = 12
+    for frame in range(1, 49):
+        t = (frame - 1) / 48
+        x = -0.5 + 0.55 * math.sin(t * math.tau)
+        z = 2.85 + 0.05 * math.sin(t * 2 * math.tau)
+        rz = 0.08 * math.sin(t * math.tau + 0.4)
+        pivot.location = (x, -1.2, z)
         pivot.rotation_euler.z = rz
         pivot.keyframe_insert(data_path="location", frame=frame)
         pivot.keyframe_insert(data_path="rotation_euler", frame=frame)
 
-    # 输出设置：16:9，先渲 640×360 看效果
+    # 固定相机（原场景相机挂在旋转圆环上，这里保留第 1 帧机位）
+    camera = scene.camera
+    camera_world = camera.matrix_world.copy()
+    camera.parent = None
+    camera.matrix_world = camera_world
+    camera.animation_data_clear()
+
+    # 输出设置
     scene.render.engine = "BLENDER_EEVEE"
-    scene.render.resolution_x = 800
-    scene.render.resolution_y = 450
+    scene.render.resolution_x = 640
+    scene.render.resolution_y = 360
     scene.render.resolution_percentage = 100
-    scene.eevee.taa_render_samples = 64
+    scene.eevee.taa_render_samples = 48
     scene.render.image_settings.file_format = "PNG"
     scene.render.image_settings.color_mode = "RGBA"
     scene.render.film_transparent = True
-    scene.render.filepath = f"{ROOT}/design/blender/ghost_test/frame_"
+    scene.render.filepath = f"{ROOT}/design/blender/ghost_frames/frame_"
 
     # 贴图打包，避免复制 .blend 后相对路径失效
     bpy.ops.file.pack_all()

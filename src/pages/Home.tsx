@@ -9,6 +9,7 @@ import Footer from '../components/Footer';
 import Hobbies from '../components/Hobbies';
 import Achievements from '../components/Achievements';
 import GitHubGarden from '../components/GitHubGarden';
+import GhostIsland from '../components/GhostIsland';
 import WordCloud from '../components/WordCloud';
 import RevealOnScroll from '../components/RevealOnScroll';
 import BackToTop from '../components/BackToTop';
@@ -23,7 +24,12 @@ const Home: React.FC = () => {
                 <main className="space-y-12">
                     <RevealOnScroll delay={0}><Header /></RevealOnScroll>
                     <RevealOnScroll delay={60}><About /></RevealOnScroll>
-                    <RevealOnScroll delay={120}><GitHubGarden /></RevealOnScroll>
+                    <RevealOnScroll delay={120}>
+                        <div className="garden-duo">
+                            <GitHubGarden />
+                            <GhostIsland />
+                        </div>
+                    </RevealOnScroll>
                     <RevealOnScroll delay={180}>
                         <div className="home-duo">
                             <Skills />

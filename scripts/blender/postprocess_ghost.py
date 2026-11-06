@@ -1,6 +1,6 @@
-"""把幽灵小岛渲染图调成紫色调、裁切留白、导出透明 WebP。
+"""把幽灵小岛序列调成紫色调、统一裁切，导出静态 + 动画 WebP。
 
-前置：Blender 渲染 design/blender/ghost_test/frame_0001.png（RGBA）
+前置：Blender 渲染 design/blender/ghost_frames/frame_0001..0048.png（RGBA）
 用法：python scripts/blender/postprocess_ghost.py
 """
 from __future__ import annotations
@@ -11,16 +11,16 @@ import numpy as np
 from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-SRC = ROOT / "design" / "blender" / "ghost_test" / "frame_0001.png"
-OUT = ROOT / "public" / "images" / "ghost-island.webp"
+FRAMES = ROOT / "design" / "blender" / "ghost_frames"
+STATIC_OUT = ROOT / "public" / "images" / "ghost-island.webp"
+ANIM_OUT = ROOT / "public" / "images" / "ghost-island-anim.webp"
 
 # 0-255 hue：绿~85、青~128、蓝~170、黄~42、橙~21
 SRC_HUES = np.array([0, 21, 42, 60, 85, 110, 128, 150, 170, 190], dtype=np.float32)
 DST_HUES = np.array([250, 242, 248, 234, 210, 218, 225, 230, 235, 238], dtype=np.float32)
 
 
-def main() -> None:
-    image = Image.open(SRC).convert("RGBA")
+def grade(image: Image.Image) -> Image.Image:
     pixels = np.array(image).astype(np.float32)
     rgb = Image.fromarray(pixels[..., :3].astype(np.uint8), "RGB")
 
@@ -32,28 +32,52 @@ def main() -> None:
     graded = np.stack([new_hue, new_sat, new_val], axis=-1).astype(np.uint8)
     graded_rgb = np.array(Image.fromarray(graded, "HSV").convert("RGB")).astype(np.float32)
 
-    alpha = pixels[..., 3]
-    result = Image.fromarray(
-        np.dstack([graded_rgb, alpha]).astype(np.uint8), "RGBA"
+    return Image.fromarray(
+        np.dstack([graded_rgb, pixels[..., 3]]).astype(np.uint8), "RGBA"
     )
 
-    bbox = result.getchannel("A").getbbox()
-    if not bbox:
-        raise SystemExit("图像全透明，检查渲染")
+
+def main() -> None:
+    files = sorted(FRAMES.glob("frame_*.png"))
+    if len(files) < 48:
+        raise SystemExit(f"只有 {len(files)} 帧，至少要 48 帧")
+
+    graded = [grade(Image.open(path).convert("RGBA")) for path in files[:48]]
+
+    # 所有帧取并集，保证游走时裁切框不抖
+    left = min(frame.getchannel("A").getbbox()[0] for frame in graded)
+    top = min(frame.getchannel("A").getbbox()[1] for frame in graded)
+    right = max(frame.getchannel("A").getbbox()[2] for frame in graded)
+    bottom = max(frame.getchannel("A").getbbox()[3] for frame in graded)
 
     margin = 36
-    width = bbox[2] - bbox[0] + margin * 2
-    height = bbox[3] - bbox[1] + margin * 2
-    canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-    canvas.paste(result, (margin - bbox[0], margin - bbox[1]))
+    left = max(0, left - margin)
+    top = max(0, top - margin)
+    right = min(graded[0].width, right + margin)
+    bottom = min(graded[0].height, bottom + margin)
+    box = (left, top, right, bottom)
 
-    if canvas.width > 640:
-        ratio = 640 / canvas.width
-        canvas = canvas.resize((640, round(canvas.height * ratio)), Image.LANCZOS)
+    cropped = [frame.crop(box) for frame in graded]
+    if cropped[0].width > 440:
+        ratio = 440 / cropped[0].width
+        size = (440, round(cropped[0].height * ratio))
+        cropped = [frame.resize(size, Image.LANCZOS) for frame in cropped]
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    canvas.save(OUT, "WEBP", quality=90, method=6)
-    print(f"{OUT.relative_to(ROOT)}  {OUT.stat().st_size / 1024:.0f} KB  {canvas.size[0]}x{canvas.size[1]}")
+    STATIC_OUT.parent.mkdir(parents=True, exist_ok=True)
+    cropped[0].save(STATIC_OUT, "WEBP", quality=90, method=6)
+    cropped[0].save(
+        ANIM_OUT,
+        "WEBP",
+        save_all=True,
+        append_images=cropped[1:],
+        duration=83,
+        loop=0,
+        quality=78,
+        method=6,
+    )
+
+    for path in (STATIC_OUT, ANIM_OUT):
+        print(f"{path.relative_to(ROOT)}  {path.stat().st_size / 1024:.0f} KB  {cropped[0].size[0]}x{cropped[0].size[1]}")
 
 
 if __name__ == "__main__":
