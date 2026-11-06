@@ -5,8 +5,8 @@
 .ghost-island {
     position: absolute;
     right: clamp(12px, 3vw, 56px);
-    bottom: 10px;
-    width: clamp(145px, 12vw, 175px);
+    bottom: 0;
+    width: clamp(170px, 14vw, 200px);
     pointer-events: none;
     opacity: 0.96;
     z-index: 0;
@@ -47,4 +47,5 @@ html.dark .ghost-island {
         animation: none;
     }
 }
+
 
