@@ -4,7 +4,7 @@
 
 .garden-duo {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(190px, 20vw, 250px);
+    grid-template-columns: minmax(0, 1fr) clamp(190px, 20vw, 280px);
     gap: 20px;
     align-items: center;
 }
@@ -26,6 +26,12 @@
     display: block;
     width: 100%;
     height: auto;
+}
+
+.ghost-island .ghost-anim {
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.4s ease;
 }
 
 html.dark .ghost-island {

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 const GhostIsland: React.FC = () => {
     const [reduced, setReduced] = useState(false);
     const [failed, setFailed] = useState(false);
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         const query = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -16,16 +17,21 @@ const GhostIsland: React.FC = () => {
     const base = import.meta.env.BASE_URL;
     const staticSrc = `${base}images/ghost-island.webp`;
     const animatedSrc = `${base}images/ghost-island-anim.webp`;
-    const src = reduced || failed ? staticSrc : animatedSrc;
 
     return (
         <div className="ghost-island" aria-hidden="true">
-            <img
-                src={src}
-                alt=""
-                decoding="async"
-                onError={() => setFailed(true)}
-            />
+            <img className="ghost-static" src={staticSrc} alt="" decoding="async" />
+            {!reduced && !failed && (
+                <img
+                    className="ghost-anim"
+                    src={animatedSrc}
+                    alt=""
+                    decoding="async"
+                    style={{ opacity: loaded ? 1 : 0 }}
+                    onLoad={() => setLoaded(true)}
+                    onError={() => setFailed(true)}
+                />
+            )}
         </div>
     );
 };
