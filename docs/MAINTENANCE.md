@@ -189,8 +189,8 @@ python scripts/blender/postprocess_tree_tutorial.py
   - 渲染 48 帧后，后期均匀取 36 帧并缩到 360px，控制加载体积
 - 组件：`src/components/GhostIsland.tsx` + `src/styles/ghost-island.css`
 - 位置：`Home.tsx` 的 `.garden-duo`，代码花园在左、小岛在右；
-  `grid-template-columns: minmax(0,1fr) clamp(190px,20vw,280px)`；
-  1100px 以下变成上下堆叠
+  `grid-template-columns: minmax(0,1fr) clamp(190px,20vw,280px)`，
+  ≥1400px 时固定 320px；1100px 以下变成上下堆叠
 - 代码花园的 canvas 原本固定 885px，侧栏出现时用 `max-width:100%` 等比缩小；
   `GitHubGarden` 的鼠标坐标也按缩放比例换算，避免 tooltip 指错格子
 - 静态首帧先显示，419KB 动画加载完再淡入；`prefers-reduced-motion` 或动画失败时只保留静态图

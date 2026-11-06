@@ -38,6 +38,12 @@ html.dark .ghost-island {
     filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.45));
 }
 
+@media (min-width: 1400px) {
+    .garden-duo {
+        grid-template-columns: minmax(0, 1fr) 320px;
+    }
+}
+
 @media (max-width: 1100px) {
     .garden-duo {
         grid-template-columns: 1fr;
