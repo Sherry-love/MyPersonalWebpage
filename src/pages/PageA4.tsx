@@ -173,12 +173,34 @@ const FluidTimeline: React.FC<{ entries: TimelineEntry[] }> = ({ entries }) => {
     );
 };
 
-// README 是这一页的正文来源；时间轴已经独立到 src/data/timeline.ts，
-// 这里只需要去掉 README 里与时间轴重复的「简单记录」段落。
+// README 是这一页的正文来源；时间轴已经独立到 src/data/timeline.ts。
+// 网页上只保留自我介绍、技术栈和碎碎念；下面这些偏「仓库说明」的内容
+// 仍留在 README 里给仓库看，但不进简介页。
 const readmeBody = (() => {
-    const heading = '\n## 简单记录';
-    const idx = readmeRaw.indexOf(heading);
-    return idx !== -1 ? readmeRaw.slice(0, idx).trimEnd() : readmeRaw;
+    let body = readmeRaw;
+
+    // 顶部的在线地址
+    body = body.replace(/^> 在线地址：.*(?:\r?\n)?/m, '');
+
+    // 「项目介绍」里的功能清单 + 彩蛋清单
+    const features = body.indexOf('**几个自己比较喜欢的部分**');
+    const thoughts = body.indexOf('## 碎碎念');
+    if (features !== -1 && thoughts !== -1 && thoughts > features) {
+        body = body.slice(0, features) + body.slice(thoughts);
+    }
+
+    // 整段只在仓库里保留的章节
+    const stripSection = (markdown: string, title: string) => {
+        const start = markdown.indexOf(`\n## ${title}`);
+        if (start === -1) return markdown;
+        const next = markdown.indexOf('\n## ', start + 4);
+        return markdown.slice(0, start) + (next === -1 ? '' : markdown.slice(next));
+    };
+    for (const title of ['内容介绍', '项目文件注释', '维护与部署', '简单记录']) {
+        body = stripSection(body, title);
+    }
+
+    return body.replace(/\n{3,}/g, '\n\n').trimEnd();
 })();
 
 const PageA4: React.FC = () => {
