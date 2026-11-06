@@ -24,6 +24,7 @@ import './styles/objects.css';
 import './styles/eggs.css';
 import './styles/photos.css';
 import './styles/words.css';
+import './styles/hero-tree.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

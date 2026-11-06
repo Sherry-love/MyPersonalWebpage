@@ -140,6 +140,37 @@ python scripts/build-images.py
   （`1.75fr / 0.9fr`），900px 以下自动纵向堆叠；`<WordCloud compact />`
   会隐藏副标题、把球缩到 340px，适合当侧边小组件。
 
+## 四季树（Blender 渲染）
+
+首页标题上方的小树不是实时 3D，而是一段 **Blender 离线渲染的 6 秒无缝循环**
+（144 帧 / 24fps，480×480），网页端只是一个 `<video>`。
+
+- 场景：`design/blender/four-seasons.blend`；生成脚本 `scripts/blender/build_four_seasons.py`
+- 结构：低多边形小岛 + 四色树冠（春粉 / 夏绿 / 秋橙 / 冬蓝）+ 转台 360° 线性旋转
+- 渲染：Cycles + OptiX，32 采样 + OpenImageDenoise，透明背景
+
+重新渲染：
+
+```bash
+# 1. 生成场景（会覆盖 four-seasons.blend）
+& "$env:LOCALAPPDATA\Programs\Blender\blender-4.5.9-windows-x64\blender.exe" -b --factory-startup --python scripts/blender/build_four_seasons.py
+
+# 2. 渲染 144 帧，约 8–10 分钟
+& "$env:LOCALAPPDATA\Programs\Blender\blender-4.5.9-windows-x64\blender.exe" -b design/blender/four-seasons.blend -a
+
+# 3. 合成奶油底、编码 MP4/WebM、生成 poster
+python scripts/blender/postprocess_tree.py
+```
+
+产物：
+
+- `public/video/four-seasons.mp4`、`.webm`
+- `public/images/four-seasons-poster.webp`
+- 组件：`src/components/HeroTree.tsx`，`prefers-reduced-motion` 或视频加载失败时回退到 poster
+
+渲染帧和合成中间文件在 `design/blender/frames/`、`design/blender/comp/`，已 gitignore；
+只有 `.blend`、脚本和最终视频会进仓库。
+
 ## 此刻的青岛（时间与天气）
 首页那颗「此刻 · 青岛 · 雨 15°C」的小胶囊不是装饰，它同时驱动整站的光线与天气层：
 
@@ -182,6 +213,7 @@ python scripts/build-images.py
 | 天气城市 | `src/ambient/AmbientContext.tsx` 的 `CITY` 与 `WEATHER_URL` |
 | 相册 | 自己的照片放 `design/photos/` 后跑 `npm run assets:photos`；Commons 素材改 `scripts/fetch-photos.py` 的 `ITEMS` |
 | 词云 | `src/data/words.ts` 的 `cloudWords`（权重、分类、可选 `href`） |
+| 四季树 | 改 `scripts/blender/build_four_seasons.py` 后重新渲染，见「四季树」一节 |
 
 ## 已知限制
 
@@ -192,3 +224,4 @@ python scripts/build-images.py
 - 移动端（< 768px）的时间轴是竖直列表，不是圆环。
 - 油画滤镜生效的 5 秒内，`position: fixed` 的元素会被滤镜容器接管，导航栏在滚动状态下会暂时离开视口；这是效果的副作用，不想接受就把 `html.oil-paint #root` 的 `filter` 去掉。
 - 相册的 14 张原图约 6.5MB（网格只加载 640px 缩略图，大图在点开时才加载）；自己的照片多起来后，可以考虑把 `fetch-photos.py` 里的 1800 改成 1400 再压一轮。
+- 四季树是 6 秒视频：iOS 低电量模式、禁用自动播放或 `prefers-reduced-motion` 下会停在 poster；这是有意的降级，不是加载失败。

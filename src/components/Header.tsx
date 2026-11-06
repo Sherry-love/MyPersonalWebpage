@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TypingEffect from './TypingEffect';
+import HeroTree from './HeroTree';
 import { useAmbient, type TimePhase, type WeatherKind } from '../ambient/AmbientContext';
 
 const WEATHER_ICON: Record<WeatherKind, string> = {
@@ -33,14 +34,13 @@ const Header: React.FC = () => {
     return (
         <header className="text-center py-16">
             <div
-                className="inline-block p-6 rounded-full mb-6"
+                className="mb-6"
                 style={{
-                    background: 'rgba(232,226,240,0.3)',
                     transform: `translateY(${iconOffset}px)`,
                     transition: 'transform 0.05s linear',
                 }}
             >
-                <i className="fas fa-feather-alt text-5xl" style={{ color: 'var(--accent-purple)' }}></i>
+                <HeroTree />
             </div>
             <h1
                 className="text-5xl md:text-7xl font-serif mb-4 heading-gradient"

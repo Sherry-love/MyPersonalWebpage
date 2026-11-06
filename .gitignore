@@ -116,3 +116,7 @@ shots/
 .workbuddy/
 scripts/_*
 __pycache__/
+
+# Blender render intermediates
+design/blender/frames/
+design/blender/comp/

@@ -65,6 +65,10 @@ export const timeline: TimelineEntry[] = [
         date: '2026年11月5日',
         content: '首页新增 3D 词云小组件：36 个词在球面上缓慢旋转，放在调色盘右侧，可拖拽、暂停、点词跳转。',
     },
+    {
+        date: '2026年11月6日',
+        content: '四季树上线：Blender 离线渲染 6 秒循环，放在首页标题上方，首屏不跑实时 3D。',
+    },
 ];
 
 export const lastUpdated = timeline[timeline.length - 1]?.date ?? '';
